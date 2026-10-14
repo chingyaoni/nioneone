@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>注音大冒險 V2.2 - 全學期互動題庫</title>
+  <style>
+    :root {
+      --primary: #3B82F6;
+      --grid-border: #5D4037;
+      --text-dark: #1E293B;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+      background: radial-gradient(circle at top left, #FEF9C3 0%, #E0F2FE 55%, #F3E8FF 100%);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #1E3A8A;
+      margin-right: 2px;
+    }
+
+    .unit-selector {
+      background: #FF7043;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 0.96rem;
+      font-weight: 800;
+      box-shadow: 0 3px 0 #D84315;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .count-selector {
+      background: #0EA5E9;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 0.96rem;
+      font-weight: 800;
+      box-shadow: 0 3px 0 #0284C7;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .top-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .score-pill {
+      background: #FFF8E1;
+      border: 2px solid #FFCA28;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #D97706;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-top {
+      background: #EDF2F7;
+      border: 2px solid #CBD5E0;
+      padding: 7px 11px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #2D3748;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .btn-top:active {
+      transform: scale(0.95);
+    }
+
+    .btn-top.active-hint {
+      background: #DCFCE7;
+      border-color: #22C55E;
+      color: #15803D;
+    }
+
+    .btn-top.active-challenge {
+      background: #FEE2E2;
+      border-color: #EF4444;
+      color: #B91C1C;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.35);
+    }
+
+    .btn-top.mistake-btn {
+      background: #FEF3C7;
+      border-color: #F59E0B;
+      color: #B45309;
+    }
+
+    .mode-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 20px 4px;
+      flex-wrap: wrap;
+    }
+
+    .mode-tab {
+      background: white;
+      border: 3px solid #E2E8F0;
+      border-radius: 18px;
+      padding: 9px 18px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #475569;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #CBD5E0;
+      transition: all 0.15s;
+    }
+
+    .mode-tab.active {
+      background: #3B82F6;
+      border-color: #2563EB;
+      color: white;
+      box-shadow: 0 4px 0 #1D4ED8;
+      transform: translateY(-2px);
+    }
+
+    main {
+      flex: 1;
+      max-width: 980px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 10px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .question-stage {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 28px;
+      padding: 18px 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+      border: 4px solid #FFF;
+      text-align: center;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .stage-badges {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #475569;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .round-status-pill {
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1.5px solid #BFDBFE;
+      padding: 3px 12px;
+      border-radius: 999px;
+      font-weight: 900;
+    }
+
+    .badge-challenge-tag {
+      background: #EF4444;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .badge-challenge-tag.show {
+      display: inline-block;
+    }
+
+    .progress-bar-wrap {
+      width: 100%;
+      height: 11px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4ADE80, #16A34A);
+      width: 10%;
+      transition: width 0.3s ease;
+    }
+
+    .prompt-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #334155;
+      margin-bottom: 12px;
+    }
+
+    .speaker-big-btn {
+      background: linear-gradient(135deg, #FF9800, #F57C00);
+      color: white;
+      border: none;
+      border-radius: 22px;
+      padding: 11px 26px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #E65100;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .speaker-big-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #E65100;
+    }
+
+    .hint-box {
+      margin-top: 4px;
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 44px;
+    }
+
+    .hint-emoji {
+      font-size: 2.4rem;
+    }
+
+    /* =========================================
+       國小標準「直式注音方格」與精準聲調定位引擎
+       ========================================= */
+    .word-grid-container {
+      display: inline-flex;
+      flex-direction: column;
+      border: 2.5px solid var(--grid-border);
+      background: #FFFDF9;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 2px 4px 10px rgba(0,0,0,0.06);
+    }
+
+    .char-cell {
+      width: 82px;
+      height: 94px;
+      border-bottom: 2px solid var(--grid-border);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-right: 12px;
+      background: #FFFDF9;
+    }
+
+    .char-cell.has-neutral-tone {
+      padding-top: 10px;
+    }
+
+    .char-cell:last-child {
+      border-bottom: none;
+    }
+
+    .char-cell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(93,64,55,0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(93,64,55,0.12) 1px, transparent 1px);
+      background-size: 50% 50%;
+      pointer-events: none;
+    }
+
+    .zhuyin-syllable-box {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1;
+    }
+
+    .zhuyin-syllable-box.count-1 { height: 38px; }
+    .zhuyin-syllable-box.count-2 { height: 58px; }
+    .zhuyin-syllable-box.count-3 { height: 74px; }
+
+    .sym-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #1A202C;
+      line-height: 1;
+    }
+
+    .zhuyin-syllable-box.count-1 .sym-item { height: 38px; font-size: 1.95rem; }
+    .zhuyin-syllable-box.count-2 .sym-item { height: 29px; font-size: 1.58rem; }
+    .zhuyin-syllable-box.count-3 .sym-item { height: 24.6px; font-size: 1.32rem; }
+
+    /* 輕聲點：精準置於第一個注音符號正上方 */
+    .tone-neutral {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #D97706;
+      line-height: 1;
+      z-index: 2;
+    }
+
+    /* 右側聲調（二、三、四聲）：依音節數精準定位 */
+    .tone-side {
+      position: absolute;
+      left: 100%;
+      margin-left: 2px;
+      transform: translateY(-50%);
+      font-size: 1.45rem;
+      font-weight: 900;
+      color: #2563EB;
+      line-height: 1;
+      z-index: 2;
+      white-space: nowrap;
+    }
+
+    /* 1 個注音：正中間 (50%) */
+    .tone-side.pos-1 { top: 50%; }
+    /* 2 個注音：第 1 與第 2 符號交界線正中間 (50%) */
+    .tone-side.pos-2 { top: 50%; }
+    /* 3 個注音：第 2（介音）與第 3（韻母）交界線正中間 (66.67%) */
+    .tone-side.pos-3 { top: 66.67%; }
+
+    .missing-slot {
+      color: #EF4444 !important;
+      background: #FEE2E2;
+      border: 2px dashed #EF4444;
+      border-radius: 6px;
+      padding: 0 4px;
+      font-size: 1.25rem;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translateY(-50%) scale(1); }
+      50% { transform: translateY(-50%) scale(1.12); }
+    }
+
+    .missing-sym-slot {
+      color: #EF4444 !important;
+      background: #FEE2E2;
+      border: 2px dashed #EF4444;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 1.6rem;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .options-grid.cols-5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    @media (max-width: 768px) {
+      .options-grid { grid-template-columns: repeat(2, 1fr); }
+      .options-grid.cols-5 { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .option-card {
+      background: white;
+      border: 4px solid #E2E8F0;
+      border-radius: 24px;
+      padding: 14px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 7px 0 #CBD5E0;
+      transition: transform 0.12s, border-color 0.15s, background 0.15s;
+      min-height: 140px;
+    }
+
+    .option-card:active {
+      transform: translateY(4px);
+      box-shadow: 0 3px 0 #CBD5E0;
+    }
+
+    .option-card.correct {
+      border-color: #22C55E;
+      background: #DCFCE7;
+      box-shadow: 0 7px 0 #16A34A;
+    }
+
+    .option-card.wrong {
+      border-color: #EF4444;
+      background: #FEE2E2;
+      box-shadow: 0 7px 0 #DC2626;
+      animation: shake 0.4s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    .tone-option-label {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #1E3A8A;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tone-option-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #64748B;
+      margin-top: 6px;
+    }
+
+    .feedback-banner {
+      margin-top: 12px;
+      min-height: 36px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal-content {
+      background: white;
+      border-radius: 26px;
+      max-width: 860px;
+      width: 100%;
+      max-height: 86vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      padding: 16px 24px;
+      background: #1E3A8A;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.15rem;
+      font-weight: 800;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .modal-body {
+      padding: 18px 24px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+      gap: 10px;
+    }
+
+    .word-toggle-item {
+      border: 2px solid #E2E8F0;
+      border-radius: 14px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      background: #F8FAFC;
+      gap: 8px;
+    }
+
+    .word-toggle-item input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .stat-badge {
+      display: inline-block;
+      background: #E0F2FE;
+      color: #0369A1;
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      margin-top: 3px;
+    }
+
+    .unit-check-card {
+      border: 3px solid #CBD5E0;
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 1.1rem;
+      font-weight: 800;
+      background: #F8FAFC;
+      cursor: pointer;
+    }
+
+    .unit-check-card.checked {
+      border-color: #3B82F6;
+      background: #EFF6FF;
+      color: #1D4ED8;
+    }
+
+    .confirm-inline-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFF1F2;
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 2px solid #FECDD3;
+    }
+
+    .result-modal-box {
+      max-width: 500px;
+      text-align: center;
+      padding: 32px 24px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
+    }
+
+    .result-big-icon {
+      font-size: 5rem;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .result-headline {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .result-subtext {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 24px;
+    }
+
+    .result-btn-primary {
+      background: linear-gradient(135deg, #3B82F6, #2563EB);
+      color: white;
+      border: none;
+      border-radius: 18px;
+      padding: 14px 32px;
+      font-size: 1.3rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #1D4ED8;
+    }
+
+    .result-btn-primary:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #1D4ED8;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-area">
+      <span class="brand-title">🚀 注音樂園</span>
+      <select class="unit-selector" id="unitSelect" onchange="changeUnitDropdown(this.value)">
+        <option value="unit_1_2">第一二單元</option>
+        <option value="unit_3">第三單元</option>
+        <option value="unit_4">第四單元</option>
+        <option value="unit_5">第五單元</option>
+        <option value="unit_6">第六單元</option>
+        <option value="unit_7" selected>第七單元</option>
+        <option value="all">全部單元</option>
+        <option value="custom">自訂跨單元</option>
+        <option value="mistakes">錯題本特訓</option>
+      </select>
+      <button class="btn-top" onclick="openCustomUnitModal()">➕ 跨單元組合</button>
+      <select class="count-selector" id="roundLengthSelect" onchange="changeRoundLength(this.value)">
+        <option value="5">每局 5 題</option>
+        <option value="10" selected>每局 10 題</option>
+        <option value="15">每局 15 題</option>
+        <option value="20">每局 20 題</option>
+      </select>
+    </div>
+
+    <div class="top-controls">
+      <div class="score-pill">⭐ <span id="scoreVal">0</span>｜🔥 <span id="streakVal">0</span></div>
+      <button class="btn-top" id="challengeBtn" onclick="toggleChallengeMode()">🔥 挑戰：關</button>
+      <button class="btn-top active-hint" id="toggleHintBtn" onclick="toggleHint()">💡 提示：開</button>
+      <button class="btn-top mistake-btn" onclick="openMistakeModal()">📕 錯題本 (<span id="mistakeCount">0</span>)</button>
+      <button class="btn-top" onclick="openDatabaseModal()">⚙️ 詞庫</button>
+    </div>
+  </header>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab-listen" onclick="switchMode('listen')">🎧 1. 聽音選注音</button>
+    <button class="mode-tab" id="tab-tone" onclick="switchMode('tone')">🎩 2. 聲調與輕聲捕手</button>
+    <button class="mode-tab" id="tab-spell" onclick="switchMode('spell')">🧩 3. 缺字拼音挑戰</button>
+  </div>
+
+  <main>
+    <div class="question-stage">
+      <div class="stage-badges">
+        <span id="currentScopeLabel">目前範圍：第七單元</span>
+        <span class="round-status-pill" id="roundStatusPill">🎯 第 1 / 10 題（本局錯 0 題）</span>
+        <span class="badge-challenge-tag" id="challengeBadge">🔥 易混淆音挑戰模式啟動中</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressBar"></div>
+      </div>
+      <div class="prompt-title" id="promptTitle">請點擊按鈕聽發音，選出正確的直式注音詞語！</div>
+
+      <button class="speaker-big-btn" onclick="speakCurrentWord()">
+        🔊 點擊聽發音
+      </button>
+
+      <div class="hint-box" id="hintBox"></div>
+      <div id="questionTargetArea" style="margin-top: 10px;"></div>
+    </div>
+
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="feedback-banner" id="feedbackBanner"></div>
+  </main>
+
+  <!-- 1. 闖關結算視窗 -->
+  <div class="modal-backdrop" id="roundResultModal">
+    <div class="modal-content result-modal-box">
+      <div class="result-big-icon" id="resultIcon">🏆</div>
+      <div class="result-headline" id="resultHeadline">好棒棒！</div>
+      <div class="result-subtext" id="resultSubtext">完成挑戰，全部答對 0 失誤！</div>
+      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+        <button class="result-btn-primary" id="playAgainBtn" onclick="startNextRound()">🔄 再玩一局</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 跨單元組合選擇視窗 -->
+  <div class="modal-backdrop" id="customUnitModal">
+    <div class="modal-content" style="max-width: 540px;">
+      <div class="modal-header">
+        <span>📚 勾選要合併練習的單元</span>
+        <button class="btn-top" onclick="applyCustomUnits()">套用並開始出題</button>
+      </div>
+      <div style="padding: 14px 24px; background: #EFF6FF; color: #1E40AF; font-weight: 700; font-size: 0.95rem;">
+        💡 可自由勾選多個單元（例如同時複習第一二＋第三單元）：
+      </div>
+      <div class="modal-body" id="customUnitList" style="grid-template-columns: 1fr;"></div>
+    </div>
+  </div>
+
+  <!-- 3. 錯題本視窗（含防呆二次確認重置按鈕） -->
+  <div class="modal-backdrop" id="mistakeModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>📕 錯題本紀錄（答錯過的題目會自動收錄）</span>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <button class="btn-top" id="mistakeResetTriggerBtn" style="background:#FEE2E2; color:#B91C1C; border-color:#EF4444;" onclick="showMistakeResetConfirm(true)">🗑️ 重置錯題本</button>
+          <div class="confirm-inline-group" id="mistakeResetConfirmBox" style="display:none;">
+            <span style="color:#B91C1C; font-size:0.9rem; font-weight:900;">⚠️ 確定清空？</span>
+            <button class="btn-top" style="background:#DC2626; color:white; border-color:#B91C1C; padding:4px 10px;" onclick="executeResetMistakes()">確定清空</button>
+            <button class="btn-top" style="padding:4px 10px;" onclick="showMistakeResetConfirm(false)">取消</button>
+          </div>
+          <button class="btn-top" style="background:#DCFCE7; color:#15803D; border-color:#22C55E;" onclick="startMistakePractice()">🎯 立即考錯題</button>
+          <button class="btn-top" onclick="closeMistakeModal()">關閉</button>
+        </div>
+      </div>
+      <div class="modal-body" id="mistakeListContainer"></div>
+    </div>
+  </div>
+
+  <!-- 4. 詞庫檢視與出題統計視窗（含防呆二次確認重置按鈕） -->
+  <div class="modal-backdrop" id="dbModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>📋 詞庫管理與被考次數統計</span>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <button class="btn-top" id="statResetTriggerBtn" style="background:#FEE2E2; color:#B91C1C; border-color:#EF4444;" onclick="showStatResetConfirm(true)">🗑️ 重置次數統計</button>
+          <div class="confirm-inline-group" id="statResetConfirmBox" style="display:none;">
+            <span style="color:#B91C1C; font-size:0.9rem; font-weight:900;">⚠️ 確定將次數歸零？</span>
+            <button class="btn-top" style="background:#DC2626; color:white; border-color:#B91C1C; padding:4px 10px;" onclick="executeResetWordStats()">確定歸零</button>
+            <button class="btn-top" style="padding:4px 10px;" onclick="showStatResetConfirm(false)">取消</button>
+          </div>
+          <button class="btn-top" onclick="closeDatabaseModal()">完成並關閉</button>
+        </div>
+      </div>
+      <div class="modal-body" id="dbListContainer"></div>
+    </div>
+  </div>
+
+  <script>
+    const UNIT_META = {
+      unit_1_2: "第一二單元",
+      unit_3: "第三單元",
+      unit_4: "第四單元",
+      unit_5: "第五單元",
+      unit_6: "第六單元",
+      unit_7: "第七單元"
+    };
+
+    const DATABASE = {
+      // 第一、二單元（18 詞：貓咪的咪為一聲、弟弟為 ㄉㄧˋ ㄉㄧ˙）
+      unit_1_2: [
+        { id: 101, unit: "unit_1_2", word: "貓咪",   emoji: "🐱", enabled: true, chars: [{ s: ["ㄇ","ㄠ"], t: "" },     { s: ["ㄇ","ㄧ"], t: "" }] },
+        { id: 102, unit: "unit_1_2", word: "弟弟",   emoji: "👦", enabled: true, chars: [{ s: ["ㄉ","ㄧ"], t: "ˋ" },    { s: ["ㄉ","ㄧ"], t: "˙" }] },
+        { id: 103, unit: "unit_1_2", word: "皮包",   emoji: "👜", enabled: true, chars: [{ s: ["ㄆ","ㄧ"], t: "ˊ" },    { s: ["ㄅ","ㄠ"], t: "" }] },
+        { id: 104, unit: "unit_1_2", word: "毛衣",   emoji: "🧶", enabled: true, chars: [{ s: ["ㄇ","ㄠ"], t: "ˊ" },    { s: ["ㄧ"], t: "" }] },
+        { id: 105, unit: "unit_1_2", word: "稻米",   emoji: "🌾", enabled: true, chars: [{ s: ["ㄉ","ㄠ"], t: "ˋ" },    { s: ["ㄇ","ㄧ"], t: "ˇ" }] },
+        { id: 106, unit: "unit_1_2", word: "報紙",   emoji: "📰", enabled: true, chars: [{ s: ["ㄅ","ㄠ"], t: "ˋ" },    { s: ["ㄓ"], t: "ˇ" }] },
+        { id: 107, unit: "unit_1_2", word: "飛鼠",   emoji: "🐿️", enabled: true, chars: [{ s: ["ㄈ","ㄟ"], t: "" },     { s: ["ㄕ","ㄨ"], t: "ˇ" }] },
+        { id: 108, unit: "unit_1_2", word: "海豚",   emoji: "🐬", enabled: true, chars: [{ s: ["ㄏ","ㄞ"], t: "ˇ" },    { s: ["ㄊ","ㄨ","ㄣ"], t: "ˊ" }] },
+        { id: 109, unit: "unit_1_2", word: "烏鴉",   emoji: "🐦‍⬛", enabled: true, chars: [{ s: ["ㄨ"], t: "" },         { s: ["ㄧ","ㄚ"], t: "" }] },
+        { id: 110, unit: "unit_1_2", word: "鱷魚",   emoji: "🐊", enabled: true, chars: [{ s: ["ㄜ"], t: "ˋ" },         { s: ["ㄩ"], t: "ˊ" }] },
+        { id: 111, unit: "unit_1_2", word: "牙齒",   emoji: "🦷", enabled: true, chars: [{ s: ["ㄧ","ㄚ"], t: "ˊ" },    { s: ["ㄔ"], t: "ˇ" }] },
+        { id: 112, unit: "unit_1_2", word: "喝茶",   emoji: "🍵", enabled: true, chars: [{ s: ["ㄏ","ㄜ"], t: "" },     { s: ["ㄔ","ㄚ"], t: "ˊ" }] },
+        { id: 113, unit: "unit_1_2", word: "珠寶",   emoji: "💎", enabled: true, chars: [{ s: ["ㄓ","ㄨ"], t: "" },     { s: ["ㄅ","ㄠ"], t: "ˇ" }] },
+        { id: 114, unit: "unit_1_2", word: "馬車",   emoji: "🐴", enabled: true, chars: [{ s: ["ㄇ","ㄚ"], t: "ˇ" },    { s: ["ㄔ","ㄜ"], t: "" }] },
+        { id: 115, unit: "unit_1_2", word: "衣服",   emoji: "👕", enabled: true, chars: [{ s: ["ㄧ"], t: "" },          { s: ["ㄈ","ㄨ"], t: "ˊ" }] },
+        { id: 116, unit: "unit_1_2", word: "茶壺",   emoji: "🫖", enabled: true, chars: [{ s: ["ㄔ","ㄚ"], t: "ˊ" },    { s: ["ㄏ","ㄨ"], t: "ˊ" }] },
+        { id: 117, unit: "unit_1_2", word: "跑第一", emoji: "🏃", enabled: true, chars: [{ s: ["ㄆ","ㄠ"], t: "ˇ" },    { s: ["ㄉ","ㄧ"], t: "ˋ" }, { s: ["ㄧ"], t: "" }] },
+        { id: 118, unit: "unit_1_2", word: "鵝寶寶", emoji: "🪿", enabled: true, chars: [{ s: ["ㄜ"], t: "ˊ" },         { s: ["ㄅ","ㄠ"], t: "ˇ" }, { s: ["ㄅ","ㄠ"], t: "ˇ" }] }
+      ],
+
+      // 第三單元（23 詞）
+      unit_3: [
+        { id: 301, unit: "unit_3", word: "河馬",   emoji: "🦛", enabled: true, chars: [{ s: ["ㄏ","ㄜ"], t: "ˊ" },     { s: ["ㄇ","ㄚ"], t: "ˇ" }] },
+        { id: 302, unit: "unit_3", word: "河狸",   emoji: "🦫", enabled: true, chars: [{ s: ["ㄏ","ㄜ"], t: "ˊ" },     { s: ["ㄌ","ㄧ"], t: "ˊ" }] },
+        { id: 303, unit: "unit_3", word: "泡澡",   emoji: "🛁", enabled: true, chars: [{ s: ["ㄆ","ㄠ"], t: "ˋ" },     { s: ["ㄗ","ㄠ"], t: "ˇ" }] },
+        { id: 304, unit: "unit_3", word: "築巢",   emoji: "🪹", enabled: true, chars: [{ s: ["ㄓ","ㄨ"], t: "ˊ" },     { s: ["ㄔ","ㄠ"], t: "ˊ" }] },
+        { id: 305, unit: "unit_3", word: "荔枝",   emoji: "🍒", enabled: true, chars: [{ s: ["ㄌ","ㄧ"], t: "ˋ" },     { s: ["ㄓ"], t: "" }] },
+        { id: 306, unit: "unit_3", word: "玉米",   emoji: "🌽", enabled: true, chars: [{ s: ["ㄩ"], t: "ˋ" },          { s: ["ㄇ","ㄧ"], t: "ˇ" }] },
+        { id: 307, unit: "unit_3", word: "菠菜",   emoji: "🥬", enabled: true, chars: [{ s: ["ㄅ","ㄛ"], t: "" },      { s: ["ㄘ","ㄞ"], t: "ˋ" }] },
+        { id: 308, unit: "unit_3", word: "奇異果", emoji: "🥝", enabled: true, chars: [{ s: ["ㄑ","ㄧ"], t: "ˊ" },     { s: ["ㄧ"], t: "ˋ" },      { s: ["ㄍ","ㄨ","ㄛ"], t: "ˇ" }] },
+        { id: 309, unit: "unit_3", word: "棗子",   emoji: "枣", enabled: true, chars: [{ s: ["ㄗ","ㄠ"], t: "ˇ" },     { s: ["ㄗ"], t: "˙" }] },
+        { id: 310, unit: "unit_3", word: "南瓜",   emoji: "🎃", enabled: true, chars: [{ s: ["ㄋ","ㄢ"], t: "ˊ" },     { s: ["ㄍ","ㄨ","ㄚ"], t: "" }] },
+        { id: 311, unit: "unit_3", word: "洋蔥",   emoji: "🧅", enabled: true, chars: [{ s: ["ㄧ","ㄤ"], t: "ˊ" },     { s: ["ㄘ","ㄨ","ㄥ"], t: "" }] },
+        { id: 312, unit: "unit_3", word: "玻璃",   emoji: "🪟", enabled: true, chars: [{ s: ["ㄅ","ㄛ"], t: "" },      { s: ["ㄌ","ㄧ"], t: "ˊ" }] },
+        { id: 313, unit: "unit_3", word: "巫婆",   emoji: "🧙‍♀️", enabled: true, chars: [{ s: ["ㄨ"], t: "" },          { s: ["ㄆ","ㄛ"], t: "ˊ" }] },
+        { id: 314, unit: "unit_3", word: "魔法",   emoji: "🪄", enabled: true, chars: [{ s: ["ㄇ","ㄛ"], t: "ˊ" },     { s: ["ㄈ","ㄚ"], t: "ˇ" }] },
+        { id: 315, unit: "unit_3", word: "臥房",   emoji: "🛏️", enabled: true, chars: [{ s: ["ㄨ","ㄛ"], t: "ˋ" },     { s: ["ㄈ","ㄤ"], t: "ˊ" }] },
+        { id: 316, unit: "unit_3", word: "梨子",   emoji: "🍐", enabled: true, chars: [{ s: ["ㄌ","ㄧ"], t: "ˊ" },     { s: ["ㄗ"], t: "˙" }] },
+        { id: 317, unit: "unit_3", word: "李子",   emoji: "🍑", enabled: true, chars: [{ s: ["ㄌ","ㄧ"], t: "ˇ" },     { s: ["ㄗ"], t: "˙" }] },
+        { id: 318, unit: "unit_3", word: "栗子",   emoji: "🌰", enabled: true, chars: [{ s: ["ㄌ","ㄧ"], t: "ˋ" },     { s: ["ㄗ"], t: "˙" }] },
+        { id: 319, unit: "unit_3", word: "驢子",   emoji: "🫏", enabled: true, chars: [{ s: ["ㄌ","ㄩ"], t: "ˊ" },     { s: ["ㄗ"], t: "˙" }] },
+        { id: 320, unit: "unit_3", word: "章魚",   emoji: "🐙", enabled: true, chars: [{ s: ["ㄓ","ㄤ"], t: "" },      { s: ["ㄩ"], t: "ˊ" }] },
+        { id: 321, unit: "unit_3", word: "汽車",   emoji: "🚗", enabled: true, chars: [{ s: ["ㄑ","ㄧ"], t: "ˋ" },     { s: ["ㄔ","ㄜ"], t: "" }] },
+        { id: 322, unit: "unit_3", word: "早安",   emoji: "☀️", enabled: true, chars: [{ s: ["ㄗ","ㄠ"], t: "ˇ" },     { s: ["ㄢ"], t: "" }] },
+        { id: 323, unit: "unit_3", word: "彈珠",   emoji: "🔮", enabled: true, chars: [{ s: ["ㄊ","ㄢ"], t: "ˊ" },     { s: ["ㄓ","ㄨ"], t: "" }] }
+      ],
+
+      // 第四單元（24 詞）
+      unit_4: [
+        { id: 401, unit: "unit_4", word: "書包",   emoji: "🎒", enabled: true, chars: [{ s: ["ㄕ","ㄨ"], t: "" },     { s: ["ㄅ","ㄠ"], t: "" }] },
+        { id: 402, unit: "unit_4", word: "歡喜",   emoji: "😊", enabled: true, chars: [{ s: ["ㄏ","ㄨ","ㄢ"], t: "" }, { s: ["ㄒ","ㄧ"], t: "ˇ" }] },
+        { id: 403, unit: "unit_4", word: "犀牛",   emoji: "🦏", enabled: true, chars: [{ s: ["ㄒ","ㄧ"], t: "" },     { s: ["ㄋ","ㄧ","ㄡ"], t: "ˊ" }] },
+        { id: 404, unit: "unit_4", word: "耳朵",   emoji: "👂", enabled: true, chars: [{ s: ["ㄦ"], t: "ˇ" },         { s: ["ㄉ","ㄨ","ㄛ"], t: "˙" }] },
+        { id: 405, unit: "unit_4", word: "瓢蟲",   emoji: "🐞", enabled: true, chars: [{ s: ["ㄆ","ㄧ","ㄠ"], t: "ˊ" }, { s: ["ㄔ","ㄨ","ㄥ"], t: "ˊ" }] },
+        { id: 406, unit: "unit_4", word: "獅子",   emoji: "🦁", enabled: true, chars: [{ s: ["ㄕ"], t: "" },          { s: ["ㄗ"], t: "˙" }] },
+        { id: 407, unit: "unit_4", word: "二樓",   emoji: "🏢", enabled: true, chars: [{ s: ["ㄦ"], t: "ˋ" },         { s: ["ㄌ","ㄡ"], t: "ˊ" }] },
+        { id: 408, unit: "unit_4", word: "浣熊",   emoji: "🦝", enabled: true, chars: [{ s: ["ㄏ","ㄨ","ㄢ"], t: "ˋ" }, { s: ["ㄒ","ㄩ","ㄥ"], t: "ˊ" }] },
+        { id: 409, unit: "unit_4", word: "帆船",   emoji: "⛵", enabled: true, chars: [{ s: ["ㄈ","ㄢ"], t: "ˊ" },    { s: ["ㄔ","ㄨ","ㄢ"], t: "ˊ" }] },
+        { id: 410, unit: "unit_4", word: "手環",   emoji: "📿", enabled: true, chars: [{ s: ["ㄕ","ㄡ"], t: "ˇ" },    { s: ["ㄏ","ㄨ","ㄢ"], t: "ˊ" }] },
+        { id: 411, unit: "unit_4", word: "吊橋",   emoji: "🌉", enabled: true, chars: [{ s: ["ㄉ","ㄧ","ㄠ"], t: "ˋ" }, { s: ["ㄑ","ㄧ","ㄠ"], t: "ˊ" }] },
+        { id: 412, unit: "unit_4", word: "杯子",   emoji: "🥤", enabled: true, chars: [{ s: ["ㄅ","ㄟ"], t: "" },     { s: ["ㄗ"], t: "˙" }] },
+        { id: 413, unit: "unit_4", word: "綠豆",   emoji: "🫘", enabled: true, chars: [{ s: ["ㄌ","ㄩ"], t: "ˋ" },    { s: ["ㄉ","ㄡ"], t: "ˋ" }] },
+        { id: 414, unit: "unit_4", word: "讀書",   emoji: "📖", enabled: true, chars: [{ s: ["ㄉ","ㄨ"], t: "ˊ" },    { s: ["ㄕ","ㄨ"], t: "" }] },
+        { id: 415, unit: "unit_4", word: "黑板",   emoji: "🏫", enabled: true, chars: [{ s: ["ㄏ","ㄟ"], t: "" },     { s: ["ㄅ","ㄢ"], t: "ˇ" }] },
+        { id: 416, unit: "unit_4", word: "積木",   emoji: "🧱", enabled: true, chars: [{ s: ["ㄐ","ㄧ"], t: "" },     { s: ["ㄇ","ㄨ"], t: "ˋ" }] },
+        { id: 417, unit: "unit_4", word: "小豬",   emoji: "🐷", enabled: true, chars: [{ s: ["ㄒ","ㄧ","ㄠ"], t: "ˇ" }, { s: ["ㄓ","ㄨ"], t: "" }] },
+        { id: 418, unit: "unit_4", word: "食物",   emoji: "🍱", enabled: true, chars: [{ s: ["ㄕ"], t: "ˊ" },         { s: ["ㄨ"], t: "ˋ" }] },
+        { id: 419, unit: "unit_4", word: "番薯",   emoji: "🍠", enabled: true, chars: [{ s: ["ㄈ","ㄢ"], t: "" },     { s: ["ㄕ","ㄨ"], t: "ˇ" }] },
+        { id: 420, unit: "unit_4", word: "打呼",   emoji: "😴", enabled: true, chars: [{ s: ["ㄉ","ㄚ"], t: "ˇ" },    { s: ["ㄏ","ㄨ"], t: "" }] },
+        { id: 421, unit: "unit_4", word: "木偶",   emoji: "🪆", enabled: true, chars: [{ s: ["ㄇ","ㄨ"], t: "ˋ" },    { s: ["ㄡ"], t: "ˇ" }] },
+        { id: 422, unit: "unit_4", word: "鼻子",   emoji: "👃", enabled: true, chars: [{ s: ["ㄅ","ㄧ"], t: "ˊ" },    { s: ["ㄗ"], t: "˙" }] },
+        { id: 423, unit: "unit_4", word: "笑嘻嘻", emoji: "😄", enabled: true, chars: [{ s: ["ㄒ","ㄧ","ㄠ"], t: "ˋ" }, { s: ["ㄒ","ㄧ"], t: "" }, { s: ["ㄒ","ㄧ"], t: "" }] },
+        { id: 424, unit: "unit_4", word: "手拉手", emoji: "🤝", enabled: true, chars: [{ s: ["ㄕ","ㄡ"], t: "ˇ" },    { s: ["ㄌ","ㄚ"], t: "" }, { s: ["ㄕ","ㄡ"], t: "ˇ" }] }
+      ],
+
+      // 第五單元（21 詞：骨頭的「頭」為輕聲 ㄍㄨˇ ㄊㄡ˙）
+      unit_5: [
+        { id: 501, unit: "unit_5", word: "翹翹板", emoji: "🎢", enabled: true, chars: [{ s: ["ㄑ","ㄧ","ㄠ"], t: "ˋ" }, { s: ["ㄑ","ㄧ","ㄠ"], t: "ˋ" }, { s: ["ㄅ","ㄢ"], t: "ˇ" }] },
+        { id: 502, unit: "unit_5", word: "好朋友", emoji: "👫", enabled: true, chars: [{ s: ["ㄏ","ㄠ"], t: "ˇ" },     { s: ["ㄆ","ㄥ"], t: "ˊ" },      { s: ["ㄧ","ㄡ"], t: "ˇ" }] },
+        { id: 503, unit: "unit_5", word: "盪鞦韆", emoji: "🎠", enabled: true, chars: [{ s: ["ㄉ","ㄤ"], t: "ˋ" },     { s: ["ㄑ","ㄧ","ㄡ"], t: "" },  { s: ["ㄑ","ㄧ","ㄢ"], t: "" }] },
+        { id: 504, unit: "unit_5", word: "一起",   emoji: "🙌", enabled: true, chars: [{ s: ["ㄧ"], t: "ˋ" },          { s: ["ㄑ","ㄧ"], t: "ˇ" }] },
+        { id: 505, unit: "unit_5", word: "上下",   emoji: "↕️", enabled: true, chars: [{ s: ["ㄕ","ㄤ"], t: "ˋ" },     { s: ["ㄒ","ㄧ","ㄚ"], t: "ˋ" }] },
+        { id: 506, unit: "unit_5", word: "高低",   emoji: "📊", enabled: true, chars: [{ s: ["ㄍ","ㄠ"], t: "" },      { s: ["ㄉ","ㄧ"], t: "" }] },
+        { id: 507, unit: "unit_5", word: "好像",   emoji: "💭", enabled: true, chars: [{ s: ["ㄏ","ㄠ"], t: "ˇ" },     { s: ["ㄒ","ㄧ","ㄤ"], t: "ˋ" }] },
+        { id: 508, unit: "unit_5", word: "小鳥",   emoji: "🐦", enabled: true, chars: [{ s: ["ㄒ","ㄧ","ㄠ"], t: "ˇ" }, { s: ["ㄋ","ㄧ","ㄠ"], t: "ˇ" }] },
+        { id: 509, unit: "unit_5", word: "柚子",   emoji: "🍈", enabled: true, chars: [{ s: ["ㄧ","ㄡ"], t: "ˋ" },     { s: ["ㄗ"], t: "˙" }] },
+        { id: 510, unit: "unit_5", word: "海灘",   emoji: "🏖️", enabled: true, chars: [{ s: ["ㄏ","ㄞ"], t: "ˇ" },     { s: ["ㄊ","ㄢ"], t: "" }] },
+        { id: 511, unit: "unit_5", word: "大象",   emoji: "🐘", enabled: true, chars: [{ s: ["ㄉ","ㄚ"], t: "ˋ" },     { s: ["ㄒ","ㄧ","ㄤ"], t: "ˋ" }] },
+        { id: 512, unit: "unit_5", word: "蜜蜂",   emoji: "🐝", enabled: true, chars: [{ s: ["ㄇ","ㄧ"], t: "ˋ" },     { s: ["ㄈ","ㄥ"], t: "" }] },
+        { id: 513, unit: "unit_5", word: "燈泡",   emoji: "💡", enabled: true, chars: [{ s: ["ㄉ","ㄥ"], t: "" },      { s: ["ㄆ","ㄠ"], t: "ˋ" }] },
+        { id: 514, unit: "unit_5", word: "水牛",   emoji: "🐃", enabled: true, chars: [{ s: ["ㄕ","ㄨ","ㄟ"], t: "ˇ" }, { s: ["ㄋ","ㄧ","ㄡ"], t: "ˊ" }] },
+        { id: 515, unit: "unit_5", word: "骨頭",   emoji: "🦴", enabled: true, chars: [{ s: ["ㄍ","ㄨ"], t: "ˇ" },     { s: ["ㄊ","ㄡ"], t: "˙" }] },
+        { id: 516, unit: "unit_5", word: "鴨子",   emoji: "🦆", enabled: true, chars: [{ s: ["ㄧ","ㄚ"], t: "" },      { s: ["ㄗ"], t: "˙" }] },
+        { id: 517, unit: "unit_5", word: "白鵝",   emoji: "🦢", enabled: true, chars: [{ s: ["ㄅ","ㄞ"], t: "ˊ" },     { s: ["ㄜ"], t: "ˊ" }] },
+        { id: 518, unit: "unit_5", word: "香菇",   emoji: "🍄", enabled: true, chars: [{ s: ["ㄒ","ㄧ","ㄤ"], t: "" },  { s: ["ㄍ","ㄨ"], t: "" }] },
+        { id: 519, unit: "unit_5", word: "男生",   emoji: "👦", enabled: true, chars: [{ s: ["ㄋ","ㄢ"], t: "ˊ" },     { s: ["ㄕ","ㄥ"], t: "" }] },
+        { id: 520, unit: "unit_5", word: "相機",   emoji: "📷", enabled: true, chars: [{ s: ["ㄒ","ㄧ","ㄤ"], t: "ˋ" }, { s: ["ㄐ","ㄧ"], t: "" }] },
+        { id: 521, unit: "unit_5", word: "跳繩",   emoji: "🪢", enabled: true, chars: [{ s: ["ㄊ","ㄧ","ㄠ"], t: "ˋ" }, { s: ["ㄕ","ㄥ"], t: "ˊ" }] }
+      ],
+
+      // 第六單元（24 詞：耶誕卡的「耶」為二聲 ㄧㄝˊ）
+      unit_6: [
+        { id: 601, unit: "unit_6", word: "老師",   emoji: "👩‍🏫", enabled: true, chars: [{ s: ["ㄌ","ㄠ"], t: "ˇ" },     { s: ["ㄕ"], t: "" }] },
+        { id: 602, unit: "unit_6", word: "紅花",   emoji: "🌺", enabled: true, chars: [{ s: ["ㄏ","ㄨ","ㄥ"], t: "ˊ" }, { s: ["ㄏ","ㄨ","ㄚ"], t: "" }] },
+        { id: 603, unit: "unit_6", word: "謝謝",   emoji: "🙏", enabled: true, chars: [{ s: ["ㄒ","ㄧ","ㄝ"], t: "ˋ" }, { s: ["ㄒ","ㄧ","ㄝ"], t: "˙" }] },
+        { id: 604, unit: "unit_6", word: "畫畫",   emoji: "🎨", enabled: true, chars: [{ s: ["ㄏ","ㄨ","ㄚ"], t: "ˋ" }, { s: ["ㄏ","ㄨ","ㄚ"], t: "ˋ" }] },
+        { id: 605, unit: "unit_6", word: "公雞",   emoji: "🐓", enabled: true, chars: [{ s: ["ㄍ","ㄨ","ㄥ"], t: "" }, { s: ["ㄐ","ㄧ"], t: "" }] },
+        { id: 606, unit: "unit_6", word: "掃地",   emoji: "🧹", enabled: true, chars: [{ s: ["ㄙ","ㄠ"], t: "ˇ" },     { s: ["ㄉ","ㄧ"], t: "ˋ" }] },
+        { id: 607, unit: "unit_6", word: "葉子",   emoji: "🍃", enabled: true, chars: [{ s: ["ㄧ","ㄝ"], t: "ˋ" },     { s: ["ㄗ"], t: "˙" }] },
+        { id: 608, unit: "unit_6", word: "鞋子",   emoji: "👟", enabled: true, chars: [{ s: ["ㄒ","ㄧ","ㄝ"], t: "ˊ" }, { s: ["ㄗ"], t: "˙" }] },
+        { id: 609, unit: "unit_6", word: "青蛙",   emoji: "🐸", enabled: true, chars: [{ s: ["ㄑ","ㄧ","ㄥ"], t: "" }, { s: ["ㄨ","ㄚ"], t: "" }] },
+        { id: 610, unit: "unit_6", word: "蘋果",   emoji: "🍎", enabled: true, chars: [{ s: ["ㄆ","ㄧ","ㄥ"], t: "ˊ" }, { s: ["ㄍ","ㄨ","ㄛ"], t: "ˇ" }] },
+        { id: 611, unit: "unit_6", word: "彩虹",   emoji: "🌈", enabled: true, chars: [{ s: ["ㄘ","ㄞ"], t: "ˇ" },     { s: ["ㄏ","ㄨ","ㄥ"], t: "ˊ" }] },
+        { id: 612, unit: "unit_6", word: "橘子",   emoji: "🍊", enabled: true, chars: [{ s: ["ㄐ","ㄩ"], t: "ˊ" },     { s: ["ㄗ"], t: "˙" }] },
+        { id: 613, unit: "unit_6", word: "皮鞋",   emoji: "👞", enabled: true, chars: [{ s: ["ㄆ","ㄧ"], t: "ˊ" },     { s: ["ㄒ","ㄧ","ㄝ"], t: "ˊ" }] },
+        { id: 614, unit: "unit_6", word: "粽子",   emoji: "🫔", enabled: true, chars: [{ s: ["ㄗ","ㄨ","ㄥ"], t: "ˋ" }, { s: ["ㄗ"], t: "˙" }] },
+        { id: 615, unit: "unit_6", word: "蘿蔔",   emoji: "🥕", enabled: true, chars: [{ s: ["ㄌ","ㄨ","ㄛ"], t: "ˊ" }, { s: ["ㄅ","ㄛ"], t: "˙" }] },
+        { id: 616, unit: "unit_6", word: "刷牙",   emoji: "🪥", enabled: true, chars: [{ s: ["ㄕ","ㄨ","ㄚ"], t: "" }, { s: ["ㄧ","ㄚ"], t: "ˊ" }] },
+        { id: 617, unit: "unit_6", word: "跌倒",   emoji: "🤕", enabled: true, chars: [{ s: ["ㄉ","ㄧ","ㄝ"], t: "ˊ" }, { s: ["ㄉ","ㄠ"], t: "ˇ" }] },
+        { id: 618, unit: "unit_6", word: "花生",   emoji: "🥜", enabled: true, chars: [{ s: ["ㄏ","ㄨ","ㄚ"], t: "" }, { s: ["ㄕ","ㄥ"], t: "" }] },
+        { id: 619, unit: "unit_6", word: "龍蝦",   emoji: "🦞", enabled: true, chars: [{ s: ["ㄌ","ㄨ","ㄥ"], t: "ˊ" }, { s: ["ㄒ","ㄧ","ㄚ"], t: "" }] },
+        { id: 620, unit: "unit_6", word: "時鐘",   emoji: "⏰", enabled: true, chars: [{ s: ["ㄕ"], t: "ˊ" },         { s: ["ㄓ","ㄨ","ㄥ"], t: "" }] },
+        { id: 621, unit: "unit_6", word: "果凍",   emoji: "🍮", enabled: true, chars: [{ s: ["ㄍ","ㄨ","ㄛ"], t: "ˇ" }, { s: ["ㄉ","ㄨ","ㄥ"], t: "ˋ" }] },
+        { id: 622, unit: "unit_6", word: "蝸牛",   emoji: "🐌", enabled: true, chars: [{ s: ["ㄍ","ㄨ","ㄚ"], t: "" }, { s: ["ㄋ","ㄧ","ㄡ"], t: "ˊ" }] },
+        { id: 623, unit: "unit_6", word: "鳥窩",   emoji: "🪺", enabled: true, chars: [{ s: ["ㄋ","ㄧ","ㄠ"], t: "ˇ" }, { s: ["ㄨ","ㄛ"], t: "" }] },
+        { id: 624, unit: "unit_6", word: "耶誕卡", emoji: "🎄", enabled: true, chars: [{ s: ["ㄧ","ㄝ"], t: "ˊ" },     { s: ["ㄉ","ㄢ"], t: "ˋ" }, { s: ["ㄎ","ㄚ"], t: "ˇ" }] }
+      ],
+
+      // 第七單元（21 詞：睡午覺的覺、仙草凍的凍皆為四聲）
+      unit_7: [
+        { id: 701, unit: "unit_7", word: "烏龜",   emoji: "🐢", enabled: true, chars: [{ s: ["ㄨ"], t: "" },          { s: ["ㄍ","ㄨ","ㄟ"], t: "" }] },
+        { id: 702, unit: "unit_7", word: "兔子",   emoji: "🐰", enabled: true, chars: [{ s: ["ㄊ","ㄨ"], t: "ˋ" },     { s: ["ㄗ"], t: "˙" }] },
+        { id: 703, unit: "unit_7", word: "比賽",   emoji: "🏆", enabled: true, chars: [{ s: ["ㄅ","ㄧ"], t: "ˇ" },     { s: ["ㄙ","ㄞ"], t: "ˋ" }] },
+        { id: 704, unit: "unit_7", word: "領先",   emoji: "🥇", enabled: true, chars: [{ s: ["ㄌ","ㄧ","ㄥ"], t: "ˇ" }, { s: ["ㄒ","ㄧ","ㄢ"], t: "" }] },
+        { id: 705, unit: "unit_7", word: "落後",   emoji: "🏃", enabled: true, chars: [{ s: ["ㄌ","ㄨ","ㄛ"], t: "ˋ" }, { s: ["ㄏ","ㄡ"], t: "ˋ" }] },
+        { id: 706, unit: "unit_7", word: "不氣餒", emoji: "💪", enabled: true, chars: [{ s: ["ㄅ","ㄨ"], t: "ˊ" },     { s: ["ㄑ","ㄧ"], t: "ˋ" }, { s: ["ㄋ","ㄟ"], t: "ˇ" }] },
+        { id: 707, unit: "unit_7", word: "哈哈笑", emoji: "😆", enabled: true, chars: [{ s: ["ㄏ","ㄚ"], t: "" },      { s: ["ㄏ","ㄚ"], t: "" },  { s: ["ㄒ","ㄧ","ㄠ"], t: "ˋ" }] },
+        { id: 708, unit: "unit_7", word: "睡午覺", emoji: "😴", enabled: true, chars: [{ s: ["ㄕ","ㄨ","ㄟ"], t: "ˋ" }, { s: ["ㄨ"], t: "ˇ" },      { s: ["ㄐ","ㄧ","ㄠ"], t: "ˋ" }] },
+        { id: 709, unit: "unit_7", word: "糖果",   emoji: "🍬", enabled: true, chars: [{ s: ["ㄊ","ㄤ"], t: "ˊ" },     { s: ["ㄍ","ㄨ","ㄛ"], t: "ˇ" }] },
+        { id: 710, unit: "unit_7", word: "苦瓜",   emoji: "🥒", enabled: true, chars: [{ s: ["ㄎ","ㄨ"], t: "ˇ" },     { s: ["ㄍ","ㄨ","ㄚ"], t: "" }] },
+        { id: 711, unit: "unit_7", word: "布丁",   emoji: "🍮", enabled: true, chars: [{ s: ["ㄅ","ㄨ"], t: "ˋ" },     { s: ["ㄉ","ㄧ","ㄥ"], t: "" }] },
+        { id: 712, unit: "unit_7", word: "雞塊",   emoji: "🍗", enabled: true, chars: [{ s: ["ㄐ","ㄧ"], t: "" },      { s: ["ㄎ","ㄨ","ㄞ"], t: "ˋ" }] },
+        { id: 713, unit: "unit_7", word: "水餃",   emoji: "🥟", enabled: true, chars: [{ s: ["ㄕ","ㄨ","ㄟ"], t: "ˇ" }, { s: ["ㄐ","ㄧ","ㄠ"], t: "ˇ" }] },
+        { id: 714, unit: "unit_7", word: "麵包",   emoji: "🍞", enabled: true, chars: [{ s: ["ㄇ","ㄧ","ㄢ"], t: "ˋ" }, { s: ["ㄅ","ㄠ"], t: "" }] },
+        { id: 715, unit: "unit_7", word: "櫻桃",   emoji: "🍒", enabled: true, chars: [{ s: ["ㄧ","ㄥ"], t: "" },      { s: ["ㄊ","ㄠ"], t: "ˊ" }] },
+        { id: 716, unit: "unit_7", word: "水梨",   emoji: "🍐", enabled: true, chars: [{ s: ["ㄕ","ㄨ","ㄟ"], t: "ˇ" }, { s: ["ㄌ","ㄧ"], t: "ˊ" }] },
+        { id: 717, unit: "unit_7", word: "拐杖",   emoji: "🦯", enabled: true, chars: [{ s: ["ㄍ","ㄨ","ㄞ"], t: "ˇ" }, { s: ["ㄓ","ㄤ"], t: "ˋ" }] },
+        { id: 718, unit: "unit_7", word: "領帶",   emoji: "👔", enabled: true, chars: [{ s: ["ㄌ","ㄧ","ㄥ"], t: "ˇ" }, { s: ["ㄉ","ㄞ"], t: "ˋ" }] },
+        { id: 719, unit: "unit_7", word: "仙草凍", emoji: "🍨", enabled: true, chars: [{ s: ["ㄒ","ㄧ","ㄢ"], t: "" },  { s: ["ㄘ","ㄠ"], t: "ˇ" }, { s: ["ㄉ","ㄨ","ㄥ"], t: "ˋ" }] },
+        { id: 720, unit: "unit_7", word: "粉圓冰", emoji: "🍧", enabled: true, chars: [{ s: ["ㄈ","ㄣ"], t: "ˇ" },     { s: ["ㄩ","ㄢ"], t: "ˊ" }, { s: ["ㄅ","ㄧ","ㄥ"], t: "" }] },
+        { id: 721, unit: "unit_7", word: "噴水池", emoji: "⛲", enabled: true, chars: [{ s: ["ㄆ","ㄣ"], t: "" },      { s: ["ㄕ","ㄨ","ㄟ"], t: "ˇ" }, { s: ["ㄔ"], t: "ˊ" }] }
+      ]
+    };
+
+    const CONFUSION_MAP = {
+      "ㄗ": ["ㄓ", "ㄘ", "ㄙ"],
+      "ㄘ": ["ㄔ", "ㄗ", "ㄙ"],
+      "ㄙ": ["ㄕ", "ㄘ", "ㄗ"],
+      "ㄓ": ["ㄗ", "ㄔ", "ㄕ"],
+      "ㄔ": ["ㄘ", "ㄓ", "ㄕ"],
+      "ㄕ": ["ㄙ", "ㄔ", "ㄓ"],
+      "ㄌ": ["ㄋ", "ㄖ"],
+      "ㄋ": ["ㄌ"],
+      "ㄈ": ["ㄏ", "ㄆ"],
+      "ㄏ": ["ㄈ", "ㄎ"],
+      "ㄅ": ["ㄆ", "ㄉ"],
+      "ㄆ": ["ㄅ", "ㄈ"],
+      "ㄉ": ["ㄊ", "ㄅ"],
+      "ㄊ": ["ㄉ", "ㄎ"],
+      "ㄍ": ["ㄎ", "ㄉ"],
+      "ㄎ": ["ㄍ", "ㄏ"],
+      "ㄐ": ["ㄑ", "ㄒ", "ㄓ"],
+      "ㄑ": ["ㄐ", "ㄒ", "ㄔ"],
+      "ㄒ": ["ㄕ", "ㄑ", "ㄐ"],
+      "ㄖ": ["ㄌ", "ㄕ"],
+      "ㄣ": ["ㄥ", "ㄢ"],
+      "ㄥ": ["ㄣ", "ㄤ"],
+      "ㄢ": ["ㄤ", "ㄣ"],
+      "ㄤ": ["ㄢ", "ㄥ"],
+      "ㄛ": ["ㄜ", "ㄡ"],
+      "ㄜ": ["ㄛ", "ㄟ"],
+      "ㄟ": ["ㄝ", "ㄞ"],
+      "ㄝ": ["ㄟ", "ㄞ"],
+      "ㄞ": ["ㄟ", "ㄢ"],
+      "ㄠ": ["ㄡ", "ㄤ"],
+      "ㄡ": ["ㄠ", "ㄛ"],
+      "ㄧ": ["ㄩ"],
+      "ㄩ": ["ㄧ", "ㄨ"],
+      "ㄨ": ["ㄩ"]
+    };
+
+    let questionsPerRound = 10;
+    let currentUnitKey = "unit_7";
+    let customSelectedUnits = ["unit_1_2", "unit_3", "unit_4", "unit_5", "unit_6", "unit_7"];
+    let currentMode = "listen";
+    let challengeMode = false;
+    let showHint = true;
+    let score = 0;
+    let streak = 0;
+
+    // 單局進度與不重複出題追蹤
+    let roundQuestionIndex = 1;
+    let roundMistakeCount = 0;
+    let currentQuestionHadMistake = false;
+    let usedWordIdsInRound = new Set();        // 記錄本局已出現過的語詞 ID
+    let usedCharPositionsInRound = {};         // 記錄本局各語詞已考過的字元索引 { [wordId]: Set(charIdx) }
+
+    let currentQuestion = null;
+    let isLocked = false;
+
+    let mistakeBook = {};
+    let wordStats = {};
+
+    try {
+      const savedMistakes = localStorage.getItem("zhuyin_mistake_book_v2");
+      if (savedMistakes) mistakeBook = JSON.parse(savedMistakes);
+      const savedStats = localStorage.getItem("zhuyin_word_stats_v2");
+      if (savedStats) wordStats = JSON.parse(savedStats);
+    } catch (e) {}
+
+    function saveMistakes() {
+      try {
+        localStorage.setItem("zhuyin_mistake_book_v2", JSON.stringify(mistakeBook));
+      } catch (e) {}
+      updateMistakeCountUI();
+    }
+
+    function saveWordStats() {
+      try {
+        localStorage.setItem("zhuyin_word_stats_v2", JSON.stringify(wordStats));
+      } catch (e) {}
+    }
+
+    function updateMistakeCountUI() {
+      const count = Object.keys(mistakeBook).length;
+      document.getElementById("mistakeCount").textContent = count;
+    }
+
+    function updateRoundStatusUI() {
+      const pill = document.getElementById("roundStatusPill");
+      pill.textContent = `🎯 第 ${roundQuestionIndex} / ${questionsPerRound} 題（本局錯 ${roundMistakeCount} 題）`;
+      const pct = (roundQuestionIndex / questionsPerRound) * 100;
+      document.getElementById("progressBar").style.width = `${pct}%`;
+    }
+
+    function getAllWordsFlat() {
+      return Object.keys(DATABASE).flatMap(k => DATABASE[k]);
+    }
+
+    // 合成音效引擎
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(type) {
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === "correct") {
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.1);
+        osc.frequency.setValueAtTime(783.99, now + 0.2);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+        osc.start(now);
+        osc.stop(now + 0.45);
+      } else if (type === "fanfare") {
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.12);
+        osc.frequency.setValueAtTime(783.99, now + 0.24);
+        osc.frequency.setValueAtTime(1046.5, now + 0.36);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.75);
+        osc.start(now);
+        osc.stop(now + 0.75);
+      } else {
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.setValueAtTime(160, now + 0.15);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      }
+    }
+
+    function speakText(text) {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "zh-TW";
+      utter.rate = 0.82;
+      utter.pitch = 1.05;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function speakCurrentWord() {
+      if (currentQuestion) speakText(currentQuestion.speakText);
+    }
+
+    function renderWordGridHTML(chars, options = {}) {
+      const { hideToneCharIndex = -1, hideSymbolCharIndex = -1 } = options;
+
+      const cellsHTML = chars.map((ch, idx) => {
+        const symCount = ch.s.length;
+        const isSymbolHidden = idx === hideSymbolCharIndex;
+        const isToneHidden = idx === hideToneCharIndex;
+
+        const boxCountClass = isSymbolHidden ? "count-1" : `count-${symCount}`;
+        const posClass = `pos-${symCount}`;
+
+        let symbolsInnerHTML = "";
+        if (isSymbolHidden) {
+          symbolsInnerHTML = `<div class="sym-item"><span class="missing-sym-slot">？</span></div>`;
+        } else {
+          symbolsInnerHTML = ch.s.map(sym => `<div class="sym-item">${sym}</div>`).join("");
+        }
+
+        let toneHTML = "";
+        let hasNeutralClass = "";
+        if (!isSymbolHidden) {
+          if (isToneHidden) {
+            toneHTML = `<span class="tone-side ${posClass} missing-slot">？</span>`;
+          } else if (ch.t === "˙") {
+            toneHTML = `<span class="tone-neutral">˙</span>`;
+            hasNeutralClass = "has-neutral-tone";
+          } else if (ch.t) {
+            toneHTML = `<span class="tone-side ${posClass}">${ch.t}</span>`;
+          }
+        }
+
+        return `
+          <div class="char-cell ${hasNeutralClass}">
+            <div class="zhuyin-syllable-box ${boxCountClass}">
+              ${toneHTML}
+              ${symbolsInnerHTML}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      return `<div class="word-grid-container">${cellsHTML}</div>`;
+    }
+
+    function serializeChars(chars) {
+      return chars.map(c => c.s.join("") + (c.t || "_")).join("|");
+    }
+
+    function generateConfusingCharVariants(targetChar, neededCount = 3) {
+      const variants = [];
+      const targetKey = targetChar.s.join("") + (targetChar.t || "_");
+
+      for (let pos = 0; pos < targetChar.s.length; pos++) {
+        const sym = targetChar.s[pos];
+        const confusions = CONFUSION_MAP[sym] || [];
+        confusions.forEach(rep => {
+          const newS = [...targetChar.s];
+          newS[pos] = rep;
+          const candidate = { s: newS, t: targetChar.t };
+          const key = candidate.s.join("") + (candidate.t || "_");
+          if (key !== targetKey && !variants.some(v => (v.s.join("") + (v.t || "_")) === key)) {
+            variants.push(candidate);
+          }
+        });
+      }
+
+      const toneSwaps = { "": ["ˊ", "ˋ"], "ˊ": ["ˇ", ""], "ˇ": ["ˊ", "ˋ"], "ˋ": ["ˇ", ""], "˙": ["", "ˇ"] };
+      (toneSwaps[targetChar.t] || ["ˊ", "ˇ"]).forEach(newTone => {
+        const candidate = { s: [...targetChar.s], t: newTone };
+        const key = candidate.s.join("") + (candidate.t || "_");
+        if (key !== targetKey && !variants.some(v => (v.s.join("") + (v.t || "_")) === key)) {
+          variants.push(candidate);
+        }
+      });
+
+      return shuffle(variants).slice(0, neededCount);
+    }
+
+    function generateConfusingWordVariants(targetItem, neededCount = 3) {
+      const variants = [];
+      const correctStr = serializeChars(targetItem.chars);
+
+      targetItem.chars.forEach((ch, charIdx) => {
+        const charTraps = generateConfusingCharVariants(ch, 4);
+        charTraps.forEach(trapChar => {
+          const clonedChars = targetItem.chars.map((c, idx) =>
+            idx === charIdx ? trapChar : { s: [...c.s], t: c.t }
+          );
+          const str = serializeChars(clonedChars);
+          if (str !== correctStr && !variants.some(v => serializeChars(v.chars) === str)) {
+            variants.push({
+              id: `trap_${variants.length}`,
+              word: targetItem.word,
+              chars: clonedChars,
+              isTrap: true
+            });
+          }
+        });
+      });
+
+      return shuffle(variants).slice(0, neededCount);
+    }
+
+    function getUnitList() {
+      const allWords = getAllWordsFlat();
+      if (currentUnitKey === "all") {
+        return allWords;
+      }
+      if (currentUnitKey === "custom") {
+        const filtered = allWords.filter(w => customSelectedUnits.includes(w.unit));
+        return filtered.length > 0 ? filtered : allWords;
+      }
+      if (currentUnitKey === "mistakes") {
+        const mistakeIds = Object.keys(mistakeBook).map(Number);
+        return allWords.filter(w => mistakeIds.includes(w.id));
+      }
+      return DATABASE[currentUnitKey] || DATABASE.unit_7;
+    }
+
+    function getActiveWords() {
+      const list = getUnitList().filter(item => item.enabled);
+      if (currentUnitKey === "mistakes") return list;
+      return list.length >= 1 ? list : getUnitList();
+    }
+
+    function updateScopeLabel() {
+      const labelEl = document.getElementById("currentScopeLabel");
+      if (currentUnitKey === "all") {
+        labelEl.textContent = "目前範圍：全部單元";
+      } else if (currentUnitKey === "custom") {
+        const names = customSelectedUnits.map(k => UNIT_META[k]);
+        labelEl.textContent = `目前範圍：${names.join("＋")}`;
+      } else if (currentUnitKey === "mistakes") {
+        labelEl.textContent = `目前範圍：📕 錯題本特訓 (${Object.keys(mistakeBook).length}詞)`;
+      } else {
+        labelEl.textContent = `目前範圍：${UNIT_META[currentUnitKey] || ""}`;
+      }
+    }
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function resetRoundCounters() {
+      roundQuestionIndex = 1;
+      roundMistakeCount = 0;
+      currentQuestionHadMistake = false;
+      usedWordIdsInRound.clear();
+      usedCharPositionsInRound = {};
+      updateRoundStatusUI();
+    }
+
+    function changeRoundLength(val) {
+      questionsPerRound = parseInt(val, 10) || 10;
+      resetRoundCounters();
+      nextQuestion();
+    }
+
+    function changeUnitDropdown(val) {
+      if (val === "custom") {
+        openCustomUnitModal();
+        return;
+      }
+      if (val === "mistakes" && Object.keys(mistakeBook).length === 0) {
+        alert("目前錯題本是空的喔！答錯的題目會自動收錄進來。");
+        document.getElementById("unitSelect").value = currentUnitKey;
+        return;
+      }
+      currentUnitKey = val;
+      resetRoundCounters();
+      updateScopeLabel();
+      nextQuestion();
+    }
+
+    function toggleChallengeMode() {
+      challengeMode = !challengeMode;
+      const btn = document.getElementById("challengeBtn");
+      const badge = document.getElementById("challengeBadge");
+      btn.textContent = challengeMode ? "🔥 挑戰：開" : "🔥 挑戰：關";
+      btn.classList.toggle("active-challenge", challengeMode);
+      badge.classList.toggle("show", challengeMode);
+      nextQuestion();
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll(".mode-tab").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(`tab-${mode}`).classList.add("active");
+      resetRoundCounters();
+      nextQuestion();
+    }
+
+    function toggleHint() {
+      showHint = !showHint;
+      const btn = document.getElementById("toggleHintBtn");
+      btn.textContent = showHint ? "💡 提示：開" : "💡 提示：關";
+      btn.classList.toggle("active-hint", showHint);
+      renderHintBox();
+    }
+
+    function renderHintBox() {
+      const box = document.getElementById("hintBox");
+      if (!currentQuestion) return;
+      if (showHint) {
+        box.innerHTML = `<span class="hint-emoji">${currentQuestion.emoji}</span> <span>${currentQuestion.word}</span>`;
+      } else {
+        box.innerHTML = `<span class="hint-emoji">${currentQuestion.emoji}</span> <span style="color:#94A3B8; font-size:1.1rem;">（純聽音挑戰）</span>`;
+      }
+    }
+
+    /**
+     * 智慧不重複抽題演算法：
+     * - 模式 1 (listen)：優先抽本局未考過的語詞；若詞庫數小於本局題數且全數考完，才重置本局語詞池。
+     * - 模式 2/3 (tone / spell)：
+     *   第一優先：本局完全還沒出現過的語詞（隨機挑一個字考）。
+     *   第二優先：本局曾出現過、但該語詞裡還有「其他字」沒考過的語詞（只考還沒考過的那個字，絕不重複考同一個字）。
+     *   若連所有語詞的所有字都考完了（例如只勾選 2 個詞卻選 20 題），才清空字元紀錄重新一輪。
+     */
+    function pickNextQuestionTarget(activePool) {
+      if (currentMode === "listen") {
+        let unusedWords = activePool.filter(w => !usedWordIdsInRound.has(w.id));
+        if (unusedWords.length === 0) {
+          usedWordIdsInRound.clear();
+          unusedWords = activePool;
+        }
+        const pickedWord = unusedWords[Math.floor(Math.random() * unusedWords.length)];
+        usedWordIdsInRound.add(pickedWord.id);
+        return { targetItem: pickedWord, charIdx: -1 };
+      } else {
+        // 找出完全未出現過的詞
+        const completelyFreshWords = activePool.filter(w => {
+          const usedSet = usedCharPositionsInRound[w.id];
+          return !usedSet || usedSet.size === 0;
+        });
+
+        let candidateWords = completelyFreshWords;
+
+        if (candidateWords.length === 0) {
+          // 找出還有「尚未考過的字」的詞（例如「紅花」考過「紅」，還剩「花」可考）
+          const partiallyUsedWords = activePool.filter(w => {
+            const usedSet = usedCharPositionsInRound[w.id];
+            return usedSet && usedSet.size < w.chars.length;
+          });
+          candidateWords = partiallyUsedWords;
+        }
+
+        // 若所有啟用詞的所有字都已經考過一輪，才重置字元紀錄
+        if (candidateWords.length === 0) {
+          usedCharPositionsInRound = {};
+          candidateWords = activePool;
+        }
+
+        const pickedWord = candidateWords[Math.floor(Math.random() * candidateWords.length)];
+        if (!usedCharPositionsInRound[pickedWord.id]) {
+          usedCharPositionsInRound[pickedWord.id] = new Set();
+        }
+
+        const usedSet = usedCharPositionsInRound[pickedWord.id];
+        const availableCharIndices = [];
+        for (let i = 0; i < pickedWord.chars.length; i++) {
+          if (!usedSet.has(i)) availableCharIndices.push(i);
+        }
+
+        const pickedCharIdx = availableCharIndices[Math.floor(Math.random() * availableCharIndices.length)];
+        usedSet.add(pickedCharIdx);
+
+        return { targetItem: pickedWord, charIdx: pickedCharIdx };
+      }
+    }
+
+    function nextQuestion() {
+      isLocked = false;
+      currentQuestionHadMistake = false;
+      document.getElementById("feedbackBanner").textContent = "";
+      updateRoundStatusUI();
+
+      let activePool = getActiveWords();
+      if (activePool.length === 0) {
+        currentUnitKey = "unit_7";
+        document.getElementById("unitSelect").value = "unit_7";
+        updateScopeLabel();
+        activePool = getActiveWords();
+      }
+
+      const { targetItem, charIdx } = pickNextQuestionTarget(activePool);
+      const targetArea = document.getElementById("questionTargetArea");
+      const optionsGrid = document.getElementById("optionsGrid");
+      optionsGrid.innerHTML = "";
+      optionsGrid.className = "options-grid";
+
+      currentQuestion = {
+        id: targetItem.id,
+        word: targetItem.word,
+        emoji: targetItem.emoji,
+        speakText: targetItem.word
+      };
+
+      if (currentMode === "listen") {
+        document.getElementById("promptTitle").textContent = challengeMode
+          ? "🔥 【挑戰】請點擊聽發音，仔細分辨平翹舌與鼻音！"
+          : "🎧 請點擊按鈕聽發音，點選正確的「直式注音詞語」！";
+        targetArea.innerHTML = "";
+
+        let choices = [];
+        if (challengeMode) {
+          const traps = generateConfusingWordVariants(targetItem, 3);
+          choices = shuffle([{ ...targetItem, isCorrect: true }, ...traps]);
+        } else {
+          const fallbackPool = activePool.length >= 4 ? activePool : getAllWordsFlat();
+          const distractors = shuffle(fallbackPool.filter(w => w.id !== targetItem.id)).slice(0, 3);
+          choices = shuffle([{ ...targetItem, isCorrect: true }, ...distractors]);
+        }
+
+        choices.forEach(choice => {
+          const card = document.createElement("div");
+          card.className = "option-card";
+          card.innerHTML = renderWordGridHTML(choice.chars);
+          card.onclick = () => checkAnswer(card, choice.isCorrect === true, targetItem);
+          optionsGrid.appendChild(card);
+        });
+
+      } else if (currentMode === "tone") {
+        document.getElementById("promptTitle").textContent = "🎩 請問紅色問號「？」應該標上哪一個聲調？";
+        const correctTone = targetItem.chars[charIdx].t;
+
+        targetArea.innerHTML = renderWordGridHTML(targetItem.chars, { hideToneCharIndex: charIdx });
+        optionsGrid.classList.add("cols-5");
+
+        const tones = [
+          { t: "", label: "一聲", desc: "（不標號）" },
+          { t: "ˊ", label: "ˊ", desc: "二聲" },
+          { t: "ˇ", label: "ˇ", desc: "三聲" },
+          { t: "ˋ", label: "ˋ", desc: "四聲" },
+          { t: "˙", label: "˙", desc: "輕聲（上方點）" }
+        ];
+
+        tones.forEach(td => {
+          const card = document.createElement("div");
+          card.className = "option-card";
+          card.innerHTML = `
+            <div class="tone-option-label">${td.label}</div>
+            <div class="tone-option-name">${td.desc}</div>
+          `;
+          card.onclick = () => checkAnswer(card, td.t === correctTone, targetItem, () => {
+            targetArea.innerHTML = renderWordGridHTML(targetItem.chars);
+          });
+          optionsGrid.appendChild(card);
+        });
+
+      } else if (currentMode === "spell") {
+        document.getElementById("promptTitle").textContent = challengeMode
+          ? "🔥 【挑戰】小心易混淆符號！請選出正確的缺字注音！"
+          : "🧩 缺字拼音挑戰：請選出正確的注音把詞語補完！";
+
+        const answerChar = targetItem.chars[charIdx];
+        const answerKey = answerChar.s.join("") + (answerChar.t || "_");
+
+        targetArea.innerHTML = renderWordGridHTML(targetItem.chars, {
+          hideSymbolCharIndex: charIdx,
+          hideToneCharIndex: charIdx
+        });
+
+        let charChoices = [];
+        if (challengeMode) {
+          const trapChars = generateConfusingCharVariants(answerChar, 3);
+          charChoices = shuffle([answerChar, ...trapChars]);
+        } else {
+          const allChars = [];
+          const sourcePool = activePool.length >= 4 ? activePool : getAllWordsFlat();
+          sourcePool.forEach(w => w.chars.forEach(c => {
+            const k = c.s.join("") + (c.t || "_");
+            if (k !== answerKey && !allChars.some(x => (x.s.join("") + (x.t || "_")) === k)) {
+              allChars.push(c);
+            }
+          }));
+          const distractorChars = shuffle(allChars).slice(0, 3);
+          charChoices = shuffle([answerChar, ...distractorChars]);
+        }
+
+        charChoices.forEach(ch => {
+          const k = ch.s.join("") + (ch.t || "_");
+          const card = document.createElement("div");
+          card.className = "option-card";
+          card.innerHTML = renderWordGridHTML([ch]);
+          card.onclick = () => checkAnswer(card, k === answerKey, targetItem, () => {
+            targetArea.innerHTML = renderWordGridHTML(targetItem.chars);
+          });
+          optionsGrid.appendChild(card);
+        });
+      }
+
+      renderHintBox();
+      // 依據設定：切換遊戲或新一題載入時不自動發音，點擊按鈕才發音
+    }
+
+    function checkAnswer(cardElement, isCorrect, targetItem, onReveal) {
+      if (isLocked) return;
+      const banner = document.getElementById("feedbackBanner");
+
+      if (isCorrect) {
+        isLocked = true;
+        cardElement.classList.add("correct");
+        playSound("correct");
+        score += challengeMode ? 15 : 10;
+        streak += 1;
+
+        wordStats[targetItem.id] = (wordStats[targetItem.id] || 0) + 1;
+        saveWordStats();
+
+        document.getElementById("scoreVal").textContent = score;
+        document.getElementById("streakVal").textContent = streak;
+
+        banner.style.color = "#15803D";
+        banner.textContent = `🎉 答對了！就是「${targetItem.word}」！`;
+        if (onReveal) onReveal();
+
+        setTimeout(() => {
+          if (roundQuestionIndex >= questionsPerRound) {
+            showRoundResultModal();
+          } else {
+            roundQuestionIndex += 1;
+            nextQuestion();
+          }
+        }, 1250);
+
+      } else {
+        cardElement.classList.add("wrong");
+        playSound("wrong");
+        streak = 0;
+        document.getElementById("streakVal").textContent = streak;
+
+        if (!currentQuestionHadMistake) {
+          currentQuestionHadMistake = true;
+          roundMistakeCount += 1;
+          updateRoundStatusUI();
+        }
+
+        mistakeBook[targetItem.id] = (mistakeBook[targetItem.id] || 0) + 1;
+        saveMistakes();
+
+        banner.style.color = "#DC2626";
+        banner.textContent = `💪 已加入錯題本！可點擊上方橘色按鈕聽「${targetItem.word}」的發音喔！`;
+      }
+    }
+
+    // 單局結束結算成績單
+    function showRoundResultModal() {
+      playSound("fanfare");
+      const iconEl = document.getElementById("resultIcon");
+      const headEl = document.getElementById("resultHeadline");
+      const subEl = document.getElementById("resultSubtext");
+      const againBtn = document.getElementById("playAgainBtn");
+      againBtn.textContent = `🔄 再玩一局 (${questionsPerRound}題)`;
+
+      if (roundMistakeCount === 0) {
+        iconEl.textContent = "🏆";
+        headEl.textContent = "好棒棒！";
+        headEl.style.color = "#16A34A";
+        subEl.textContent = `${questionsPerRound} 題全部答對、零失誤！太神啦！`;
+      } else if (roundMistakeCount <= 2) {
+        iconEl.textContent = "🌟";
+        headEl.textContent = "好厲害！";
+        headEl.style.color = "#2563EB";
+        subEl.textContent = `完成 ${questionsPerRound} 題挑戰，只錯了 ${roundMistakeCount} 題，表現超棒！`;
+      } else {
+        iconEl.textContent = "💪";
+        headEl.textContent = "加油加油！";
+        headEl.style.color = "#D97706";
+        subEl.textContent = `完成 ${questionsPerRound} 題挑戰（本局錯 ${roundMistakeCount} 題），再練一次會更熟喔！`;
+      }
+
+      document.getElementById("roundResultModal").classList.add("open");
+    }
+
+    function startNextRound() {
+      document.getElementById("roundResultModal").classList.remove("open");
+      resetRoundCounters();
+      nextQuestion();
+    }
+
+    // 跨單元組合 Modal
+    function openCustomUnitModal() {
+      const container = document.getElementById("customUnitList");
+      container.innerHTML = "";
+      Object.keys(UNIT_META).forEach(unitKey => {
+        const isChecked = customSelectedUnits.includes(unitKey);
+        const count = DATABASE[unitKey].length;
+        const div = document.createElement("label");
+        div.className = `unit-check-card ${isChecked ? "checked" : ""}`;
+        div.innerHTML = `
+          <span>📚 ${UNIT_META[unitKey]}（共 ${count} 詞）</span>
+          <input type="checkbox" style="width:24px;height:24px;" ${isChecked ? "checked" : ""}
+            onchange="toggleCustomUnitSelection('${unitKey}', this.checked, this.parentElement)" />
+        `;
+        container.appendChild(div);
+      });
+      document.getElementById("customUnitModal").classList.add("open");
+    }
+
+    function toggleCustomUnitSelection(unitKey, checked, cardEl) {
+      if (checked) {
+        if (!customSelectedUnits.includes(unitKey)) customSelectedUnits.push(unitKey);
+        cardEl.classList.add("checked");
+      } else {
+        customSelectedUnits = customSelectedUnits.filter(k => k !== unitKey);
+        cardEl.classList.remove("checked");
+      }
+    }
+
+    function applyCustomUnits() {
+      if (customSelectedUnits.length === 0) {
+        alert("請至少勾選一個單元喔！");
+        return;
+      }
+      document.getElementById("customUnitModal").classList.remove("open");
+      currentUnitKey = "custom";
+      document.getElementById("unitSelect").value = "custom";
+      resetRoundCounters();
+      updateScopeLabel();
+      nextQuestion();
+    }
+
+    // 錯題本 Modal 與兩段式防呆重置
+    function showMistakeResetConfirm(show) {
+      document.getElementById("mistakeResetTriggerBtn").style.display = show ? "none" : "inline-block";
+      document.getElementById("mistakeResetConfirmBox").style.display = show ? "inline-flex" : "none";
+    }
+
+    function openMistakeModal() {
+      showMistakeResetConfirm(false);
+      const container = document.getElementById("mistakeListContainer");
+      container.innerHTML = "";
+      const allWords = getAllWordsFlat();
+      const mistakeIds = Object.keys(mistakeBook).map(Number);
+
+      if (mistakeIds.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 30px; color:#64748B; font-size:1.15rem; font-weight:700;">
+          🎉 太棒了！目前錯題本沒有任何錯題紀錄！
+        </div>`;
+      } else {
+        mistakeIds.forEach(id => {
+          const item = allWords.find(w => w.id === id);
+          if (!item) return;
+          const zhuyinStr = item.chars.map(c => c.s.join("") + (c.t || "")).join(" ");
+          const errCount = mistakeBook[id];
+          const div = document.createElement("div");
+          div.className = "word-toggle-item";
+          div.innerHTML = `
+            <span>${item.emoji} ${item.word} <small style="color:#64748B">(${UNIT_META[item.unit]})</small><br/>
+            <small style="color:#2563EB">${zhuyinStr}</small></span>
+            <span style="background:#FEE2E2; color:#B91C1C; padding:4px 10px; border-radius:999px; font-size:0.85rem; flex-shrink:0;">錯 ${errCount} 次</span>
+          `;
+          container.appendChild(div);
+        });
+      }
+      document.getElementById("mistakeModal").classList.add("open");
+    }
+
+    function executeResetMistakes() {
+      mistakeBook = {};
+      saveMistakes();
+      showMistakeResetConfirm(false);
+      if (currentUnitKey === "mistakes") {
+        currentUnitKey = "unit_7";
+        document.getElementById("unitSelect").value = "unit_7";
+        updateScopeLabel();
+      }
+      openMistakeModal();
+      resetRoundCounters();
+      nextQuestion();
+    }
+
+    function startMistakePractice() {
+      if (Object.keys(mistakeBook).length === 0) {
+        alert("目前沒有錯題可以練習喔！");
+        return;
+      }
+      document.getElementById("mistakeModal").classList.remove("open");
+      currentUnitKey = "mistakes";
+      document.getElementById("unitSelect").value = "mistakes";
+      resetRoundCounters();
+      updateScopeLabel();
+      nextQuestion();
+    }
+
+    function closeMistakeModal() {
+      document.getElementById("mistakeModal").classList.remove("open");
+    }
+
+    // 詞庫與被考次數統計 Modal ＋ 兩段式防呆重置
+    function showStatResetConfirm(show) {
+      document.getElementById("statResetTriggerBtn").style.display = show ? "none" : "inline-block";
+      document.getElementById("statResetConfirmBox").style.display = show ? "inline-flex" : "none";
+    }
+
+    function openDatabaseModal() {
+      showStatResetConfirm(false);
+      const container = document.getElementById("dbListContainer");
+      container.innerHTML = "";
+      const list = getUnitList();
+      list.forEach((item, index) => {
+        const zhuyinStr = item.chars.map(c => c.s.join("") + (c.t || "")).join(" ");
+        const testedCount = wordStats[item.id] || 0;
+        const div = document.createElement("label");
+        div.className = "word-toggle-item";
+        div.innerHTML = `
+          <div>
+            <div>${item.emoji} ${index + 1}. ${item.word} <small style="color:#64748B">(${UNIT_META[item.unit]})</small></div>
+            <small style="color:#64748B">${zhuyinStr}</small><br/>
+            <span class="stat-badge">📊 已考 ${testedCount} 次</span>
+          </div>
+          <input type="checkbox" ${item.enabled ? "checked" : ""} onchange="toggleWord(${item.id}, this.checked)" />
+        `;
+        container.appendChild(div);
+      });
+      document.getElementById("dbModal").classList.add("open");
+    }
+
+    function executeResetWordStats() {
+      wordStats = {};
+      saveWordStats();
+      showStatResetConfirm(false);
+      openDatabaseModal();
+    }
+
+    function toggleWord(id, checked) {
+      const target = getAllWordsFlat().find(w => w.id === id);
+      if (target) target.enabled = checked;
+    }
+
+    function closeDatabaseModal() {
+      document.getElementById("dbModal").classList.remove("open");
+      resetRoundCounters();
+      nextQuestion();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      updateMistakeCountUI();
+      updateScopeLabel();
+      updateRoundStatusUI();
+      nextQuestion();
+    });
+  </script>
+</body>
+</html>
