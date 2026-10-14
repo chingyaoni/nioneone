@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>注音大冒險 V2.3 - 全學期互動題庫</title>
+  <title>注音大冒險 V2.4 - 全學期互動題庫</title>
   <style>
     :root {
       --primary: #3B82F6;
@@ -34,7 +34,7 @@
     }
 
     /* =========================================
-       頂部導覽列（支援電腦展開 & 手機收納抽屜）
+       頂部導覽列（左：Logo+選題設定 / 右：紀錄+錯題+開關+詞庫）
        ========================================= */
     header {
       background: rgba(255, 255, 255, 0.96);
@@ -54,6 +54,7 @@
       flex-wrap: wrap;
     }
 
+    /* 左上角區塊：由左到右 Logo -> 選單元 -> 跨單元 -> 每局幾題 */
     .brand-area {
       display: flex;
       align-items: center;
@@ -67,33 +68,6 @@
       color: #1E3A8A;
       margin-right: 2px;
       white-space: nowrap;
-    }
-
-    .mobile- quick-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .mobile-drawer-toggle {
-      display: none;
-      background: #EFF6FF;
-      border: 2px solid #93C5FD;
-      color: #1D4ED8;
-      padding: 6px 10px;
-      border-radius: 10px;
-      font-size: 0.88rem;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .collapsible-controls {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap;
-      flex: 1;
     }
 
     .unit-selector {
@@ -122,6 +96,21 @@
       outline: none;
     }
 
+    /* 手機專用收合按鈕（電腦/iPad 隱藏） */
+    .mobile-drawer-toggle {
+      display: none;
+      background: #EFF6FF;
+      border: 2px solid #93C5FD;
+      color: #1D4ED8;
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* 右上角區塊：由左到右 紀錄 -> 錯題 -> 挑戰開關 -> 提示開關 -> 詞庫 */
     .top-controls {
       display: flex;
       align-items: center;
@@ -756,52 +745,63 @@
        ========================================================== */
     @media (max-width: 600px) {
       header {
-        padding: 6px 10px;
+        padding: 6px 8px;
+      }
+
+      /* 左上角常駐列：Logo + 選單元 + 跨單元 + 每局幾題 + 收合鈕 */
+      .brand-area {
+        width: 100%;
+        justify-content: space-between;
+        gap: 4px;
+        flex-wrap: nowrap;
       }
 
       .brand-title {
-        font-size: 1.05rem;
+        font-size: 0.88rem;
+        margin-right: 0;
+      }
+
+      .unit-selector, .count-selector {
+        padding: 5px 6px;
+        font-size: 0.78rem;
+        border-radius: 9px;
+        box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+      }
+
+      .brand-area .btn-top {
+        padding: 5px 7px;
+        font-size: 0.78rem;
+        border-radius: 9px;
       }
 
       .mobile-drawer-toggle {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        padding: 5px 7px;
+        font-size: 0.78rem;
+        border-radius: 9px;
       }
 
-      /* 手機預設收合次要設定，點擊「⚙️ 設定」才展開 */
-      .collapsible-controls {
+      /* 右上角 5 個按鈕（紀錄/錯題/挑戰/提示/詞庫）在手機版整合進收合抽屜 */
+      .top-controls {
         display: none;
         width: 100%;
-        margin-top: 8px;
+        margin-top: 6px;
         padding-top: 8px;
         border-top: 2px dashed #E2E8F0;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-      }
-
-      .collapsible-controls.mobile-open {
-        display: flex;
-      }
-
-      .collapsible-controls .brand-Selects,
-      .collapsible-controls .top-controls {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
         justify-content: space-between;
+        gap: 6px;
       }
 
-      .unit-selector, .count-selector {
-        padding: 6px 10px;
-        font-size: 0.88rem;
-        flex: 1;
+      .top-controls.mobile-open {
+        display: flex;
       }
 
-      .btn-top {
-        padding: 5px 9px;
-        font-size: 0.82rem;
+      .top-controls .btn-top {
+        flex: 1 1 auto;
+        text-align: center;
+        padding: 6px 6px;
+        font-size: 0.78rem;
         border-radius: 10px;
       }
 
@@ -854,7 +854,7 @@
         margin-bottom: 6px;
       }
 
-      /* 發音按鈕與詞語提示改為同行並排，節省垂直空間 */
+      /* 發音按鈕與詞語提示同行並排，節省垂直空間 */
       .audio-hint-row {
         flex-direction: row;
         flex-wrap: wrap;
@@ -883,7 +883,7 @@
         margin-top: 6px !important;
       }
 
-      /* 手機版直式注音方格等比例微縮（維持 1:2:3 嚴格比例以確保聲調對齊交界） */
+      /* 手機版直式注音方格等比例微縮（維持 1:2:3 嚴格比例確保聲調對齊交界） */
       .char-cell {
         width: 58px;
         height: 62px;
@@ -976,45 +976,38 @@
 
   <header>
     <div class="header-main-row">
+      <!-- 左上角區塊（電腦與手機皆直接顯示）：由左到右 Logo -> 選單元 -> 跨單元 -> 每局幾題 -->
       <div class="brand-area">
         <span class="brand-title">🚀 注音樂園</span>
+        <select class="unit-selector" id="unitSelect" onchange="changeUnitDropdown(this.value)">
+          <option value="unit_1_2">第一二單元</option>
+          <option value="unit_3">第三單元</option>
+          <option value="unit_4">第四單元</option>
+          <option value="unit_5">第五單元</option>
+          <option value="unit_6">第六單元</option>
+          <option value="unit_7" selected>第七單元</option>
+          <option value="all">全部單元</option>
+          <option value="custom">自訂跨單元</option>
+          <option value="mistakes">錯題本特訓</option>
+        </select>
+        <button class="btn-top" onclick="openCustomUnitModal()">➕ 跨單元</button>
+        <select class="count-selector" id="roundLengthSelect" onchange="changeRoundLength(this.value)">
+          <option value="5">每局 5 題</option>
+          <option value="10" selected>每局 10 題</option>
+          <option value="15">每局 15 題</option>
+          <option value="20">每局 20 題</option>
+        </select>
+        <!-- 手機版專用收合觸發鈕 -->
+        <button class="mobile-drawer-toggle" id="mobileDrawerBtn" onclick="toggleMobileDrawer()">⚙️ 選單 ▾</button>
       </div>
 
-      <!-- 手機版常駐快捷列 -->
-      <div class="mobile-quick-actions">
+      <!-- 右上角區塊（電腦直接顯示 / 手機收合進 ⚙️ 選單）：由左到右 紀錄 -> 錯題 -> 挑戰 -> 提示 -> 詞庫 -->
+      <div class="top-controls" id="collapsibleControls">
         <button class="btn-top history-btn" onclick="openHistoryModal()">📊 紀錄 (<span id="historyCount">0</span>)</button>
         <button class="btn-top mistake-btn" onclick="openMistakeModal()">📕 錯題 (<span id="mistakeCount">0</span>)</button>
-        <button class="mobile-drawer-toggle" id="mobileDrawerBtn" onclick="toggleMobileDrawer()">⚙️ 設定 ▾</button>
-      </div>
-
-      <!-- 電腦版直接顯示 / 手機版點擊「⚙️ 設定」展開 -->
-      <div class="collapsible-controls" id="collapsibleControls">
-        <div class="brand-Selects" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-          <select class="unit-selector" id="unitSelect" onchange="changeUnitDropdown(this.value)">
-            <option value="unit_1_2">第一二單元</option>
-            <option value="unit_3">第三單元</option>
-            <option value="unit_4">第四單元</option>
-            <option value="unit_5">第五單元</option>
-            <option value="unit_6">第六單元</option>
-            <option value="unit_7" selected>第七單元</option>
-            <option value="all">全部單元</option>
-            <option value="custom">自訂跨單元</option>
-            <option value="mistakes">錯題本特訓</option>
-          </select>
-          <button class="btn-top" onclick="openCustomUnitModal()">➕ 跨單元</button>
-          <select class="count-selector" id="roundLengthSelect" onchange="changeRoundLength(this.value)">
-            <option value="5">每局 5 題</option>
-            <option value="10" selected>每局 10 題</option>
-            <option value="15">每局 15 題</option>
-            <option value="20">每局 20 題</option>
-          </select>
-        </div>
-
-        <div class="top-controls">
-          <button class="btn-top" id="challengeBtn" onclick="toggleChallengeMode()">🔥 挑戰：關</button>
-          <button class="btn-top active-hint" id="toggleHintBtn" onclick="toggleHint()">💡 提示：開</button>
-          <button class="btn-top" onclick="openDatabaseModal()">⚙️ 詞庫</button>
-        </div>
+        <button class="btn-top" id="challengeBtn" onclick="toggleChallengeMode()">🔥 挑戰：關</button>
+        <button class="btn-top active-hint" id="toggleHintBtn" onclick="toggleHint()">💡 提示：開</button>
+        <button class="btn-top" onclick="openDatabaseModal()">⚙️ 詞庫</button>
       </div>
     </div>
   </header>
@@ -1028,7 +1021,7 @@
   <main>
     <div class="question-stage">
       <div class="stage-badges">
-        <span id="currentScopeLabel">目前範圍：第七單元</span>
+        <span id="currentScopeLabel">範圍：第七單元</span>
         <span class="round-status-pill" id="roundStatusPill">🎯 第 1 / 10 題（本局錯 0 題）</span>
         <span class="badge-challenge-tag" id="challengeBadge">🔥 挑戰模式</span>
       </div>
@@ -1420,7 +1413,7 @@
       const drawer = document.getElementById("collapsibleControls");
       const btn = document.getElementById("mobileDrawerBtn");
       const isOpen = drawer.classList.toggle("mobile-open");
-      btn.textContent = isOpen ? "⚙️ 收合 ▴" : "⚙️ 設定 ▾";
+      btn.textContent = isOpen ? "⚙️ 收合 ▴" : "⚙️ 選單 ▾";
     }
 
     function updateRoundStatusUI() {
