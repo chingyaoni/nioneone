@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>注音大冒險 V2.2 - 全學期互動題庫</title>
+  <title>注音大冒險 V2.3 - 全學期互動題庫</title>
   <style>
     :root {
       --primary: #3B82F6;
@@ -27,24 +27,31 @@
       background: radial-gradient(circle at top left, #FEF9C3 0%, #E0F2FE 55%, #F3E8FF 100%);
       color: var(--text-dark);
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
     }
 
+    /* =========================================
+       頂部導覽列（支援電腦展開 & 手機收納抽屜）
+       ========================================= */
     header {
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.96);
       backdrop-filter: blur(8px);
       padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       box-shadow: 0 4px 15px rgba(0,0,0,0.06);
       position: sticky;
       top: 0;
       z-index: 50;
-      flex-wrap: wrap;
+    }
+
+    .header-main-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .brand-area {
@@ -59,6 +66,34 @@
       font-weight: 900;
       color: #1E3A8A;
       margin-right: 2px;
+      white-space: nowrap;
+    }
+
+    .mobile- quick-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mobile-drawer-toggle {
+      display: none;
+      background: #EFF6FF;
+      border: 2px solid #93C5FD;
+      color: #1D4ED8;
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .collapsible-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      flex: 1;
     }
 
     .unit-selector {
@@ -67,7 +102,7 @@
       border: none;
       padding: 8px 12px;
       border-radius: 12px;
-      font-size: 0.96rem;
+      font-size: 0.95rem;
       font-weight: 800;
       box-shadow: 0 3px 0 #D84315;
       cursor: pointer;
@@ -80,7 +115,7 @@
       border: none;
       padding: 8px 12px;
       border-radius: 12px;
-      font-size: 0.96rem;
+      font-size: 0.95rem;
       font-weight: 800;
       box-shadow: 0 3px 0 #0284C7;
       cursor: pointer;
@@ -94,19 +129,6 @@
       flex-wrap: wrap;
     }
 
-    .score-pill {
-      background: #FFF8E1;
-      border: 2px solid #FFCA28;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-weight: 800;
-      font-size: 0.95rem;
-      color: #D97706;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
     .btn-top {
       background: #EDF2F7;
       border: 2px solid #CBD5E0;
@@ -117,6 +139,7 @@
       color: #2D3748;
       cursor: pointer;
       transition: all 0.12s;
+      white-space: nowrap;
     }
 
     .btn-top:active {
@@ -142,6 +165,13 @@
       color: #B45309;
     }
 
+    .btn-top.history-btn {
+      background: #EDE9FE;
+      border-color: #8B5CF6;
+      color: #6D28D9;
+    }
+
+    /* 模式切換列 */
     .mode-tabs {
       display: flex;
       justify-content: center;
@@ -185,7 +215,7 @@
     .question-stage {
       background: rgba(255, 255, 255, 0.96);
       border-radius: 28px;
-      padding: 18px 20px;
+      padding: 16px 20px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.07);
       border: 4px solid #FFF;
       text-align: center;
@@ -229,11 +259,11 @@
 
     .progress-bar-wrap {
       width: 100%;
-      height: 11px;
+      height: 10px;
       background: #E2E8F0;
       border-radius: 999px;
       overflow: hidden;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .progress-bar-fill {
@@ -244,10 +274,18 @@
     }
 
     .prompt-title {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 800;
       color: #334155;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+    }
+
+    .audio-hint-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     .speaker-big-btn {
@@ -255,15 +293,14 @@
       color: white;
       border: none;
       border-radius: 22px;
-      padding: 11px 26px;
-      font-size: 1.3rem;
+      padding: 10px 24px;
+      font-size: 1.25rem;
       font-weight: 800;
       cursor: pointer;
       box-shadow: 0 5px 0 #E65100;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
+      gap: 8px;
     }
 
     .speaker-big-btn:active {
@@ -272,19 +309,18 @@
     }
 
     .hint-box {
-      margin-top: 4px;
-      font-size: 1.9rem;
+      font-size: 1.85rem;
       font-weight: 900;
       color: #0F172A;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      min-height: 44px;
+      gap: 8px;
+      min-height: 42px;
     }
 
     .hint-emoji {
-      font-size: 2.4rem;
+      font-size: 2.2rem;
     }
 
     /* =========================================
@@ -355,7 +391,7 @@
 
     .zhuyin-syllable-box.count-1 .sym-item { height: 38px; font-size: 1.95rem; }
     .zhuyin-syllable-box.count-2 .sym-item { height: 29px; font-size: 1.58rem; }
-    .zhuyin-syllable-box.count-3 .sym-item { height: 24.6px; font-size: 1.32rem; }
+    .zhuyin-syllable-box.count-3 .sym-item { height: 24.66px; font-size: 1.32rem; }
 
     /* 輕聲點：精準置於第一個注音符號正上方 */
     .tone-neutral {
@@ -415,6 +451,7 @@
       font-size: 1.6rem;
     }
 
+    /* 選項卡片區 */
     .options-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -423,11 +460,6 @@
 
     .options-grid.cols-5 {
       grid-template-columns: repeat(5, 1fr);
-    }
-
-    @media (max-width: 768px) {
-      .options-grid { grid-template-columns: repeat(2, 1fr); }
-      .options-grid.cols-5 { grid-template-columns: repeat(3, 1fr); }
     }
 
     .option-card {
@@ -470,28 +502,92 @@
     }
 
     .tone-option-label {
-      font-size: 2.5rem;
+      font-size: 2.4rem;
       font-weight: 900;
       color: #1E3A8A;
-      height: 50px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .tone-option-name {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #64748B;
-      margin-top: 6px;
+      margin-top: 4px;
     }
 
     .feedback-banner {
-      margin-top: 12px;
-      min-height: 36px;
-      font-size: 1.25rem;
+      margin-top: 10px;
+      min-height: 32px;
+      font-size: 1.2rem;
       font-weight: 800;
       text-align: center;
+    }
+
+    /* =========================================
+       歷史練習紀錄卡片樣式
+       ========================================= */
+    .history-card {
+      grid-column: 1 / -1;
+      border: 2px solid #E2E8F0;
+      border-radius: 16px;
+      background: #F8FAFC;
+      overflow: hidden;
+      transition: border-color 0.15s;
+    }
+
+    .history-card.expanded {
+      border-color: #8B5CF6;
+      background: #FFFFFF;
+    }
+
+    .history-summary-row {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .history-summary-row:hover {
+      background: #F1F5F9;
+    }
+
+    .history-detail-list {
+      display: none;
+      padding: 12px 16px;
+      border-top: 2px dashed #E2E8F0;
+      background: #FAFAFA;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .history-card.expanded .history-detail-list {
+      display: flex;
+    }
+
+    .history-q-item {
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .history-q-item.pass {
+      background: #F0FDF4;
+      border: 1.5px solid #BBF7D0;
+      color: #166534;
+    }
+
+    .history-q-item.fail {
+      background: #FEF2F2;
+      border: 1.5px solid #FECACA;
+      color: #991B1B;
     }
 
     /* Modals */
@@ -503,7 +599,7 @@
       align-items: center;
       justify-content: center;
       z-index: 100;
-      padding: 20px;
+      padding: 16px;
     }
 
     .modal-backdrop.open { display: flex; }
@@ -521,20 +617,20 @@
     }
 
     .modal-header {
-      padding: 16px 24px;
+      padding: 14px 20px;
       background: #1E3A8A;
       color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       flex-wrap: wrap;
       gap: 10px;
     }
 
     .modal-body {
-      padding: 18px 24px;
+      padding: 16px 20px;
       overflow-y: auto;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
@@ -574,11 +670,11 @@
     .unit-check-card {
       border: 3px solid #CBD5E0;
       border-radius: 16px;
-      padding: 14px 16px;
+      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 800;
       background: #F8FAFC;
       cursor: pointer;
@@ -603,27 +699,27 @@
     .result-modal-box {
       max-width: 500px;
       text-align: center;
-      padding: 32px 24px;
+      padding: 28px 20px;
       background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
     }
 
     .result-big-icon {
-      font-size: 5rem;
+      font-size: 4.5rem;
       line-height: 1;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .result-headline {
-      font-size: 2.6rem;
+      font-size: 2.3rem;
       font-weight: 900;
       margin-bottom: 8px;
     }
 
     .result-subtext {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: #475569;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
     }
 
     .result-btn-primary {
@@ -631,57 +727,302 @@
       color: white;
       border: none;
       border-radius: 18px;
-      padding: 14px 32px;
-      font-size: 1.3rem;
+      padding: 12px 24px;
+      font-size: 1.15rem;
       font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 6px 0 #1D4ED8;
+      box-shadow: 0 5px 0 #1D4ED8;
     }
 
-    .result-btn-primary:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 #1D4ED8;
+    .result-btn-secondary {
+      background: #EDE9FE;
+      color: #6D28D9;
+      border: 2px solid #8B5CF6;
+      border-radius: 18px;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #7C3AED;
+    }
+
+    @media (max-width: 768px) {
+      .options-grid { grid-template-columns: repeat(2, 1fr); }
+      .options-grid.cols-5 { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    /* ==========================================================
+       📱 iPhone 15 Pro 專屬一頁式緊湊響應式版面 (寬度 <= 600px)
+       ========================================================== */
+    @media (max-width: 600px) {
+      header {
+        padding: 6px 10px;
+      }
+
+      .brand-title {
+        font-size: 1.05rem;
+      }
+
+      .mobile-drawer-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* 手機預設收合次要設定，點擊「⚙️ 設定」才展開 */
+      .collapsible-controls {
+        display: none;
+        width: 100%;
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 2px dashed #E2E8F0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+
+      .collapsible-controls.mobile-open {
+        display: flex;
+      }
+
+      .collapsible-controls .brand-Selects,
+      .collapsible-controls .top-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        justify-content: space-between;
+      }
+
+      .unit-selector, .count-selector {
+        padding: 6px 10px;
+        font-size: 0.88rem;
+        flex: 1;
+      }
+
+      .btn-top {
+        padding: 5px 9px;
+        font-size: 0.82rem;
+        border-radius: 10px;
+      }
+
+      /* 三大模式單行緊湊排列 */
+      .mode-tabs {
+        padding: 6px 10px 2px;
+        gap: 6px;
+        flex-wrap: nowrap;
+      }
+
+      .mode-tab {
+        flex: 1;
+        padding: 6px 4px;
+        font-size: 0.86rem;
+        border-radius: 12px;
+        border-width: 2px;
+        box-shadow: 0 3px 0 #CBD5E0;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      main {
+        padding: 6px 10px 10px;
+        justify-content: flex-start;
+      }
+
+      .question-stage {
+        padding: 8px 10px;
+        border-radius: 18px;
+        margin-bottom: 8px;
+        border-width: 2px;
+      }
+
+      .stage-badges {
+        font-size: 0.78rem;
+        margin-bottom: 4px;
+      }
+
+      .round-status-pill {
+        padding: 2px 8px;
+      }
+
+      .progress-bar-wrap {
+        height: 6px;
+        margin-bottom: 6px;
+      }
+
+      .prompt-title {
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+      }
+
+      /* 發音按鈕與詞語提示改為同行並排，節省垂直空間 */
+      .audio-hint-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .speaker-big-btn {
+        padding: 6px 14px;
+        font-size: 0.95rem;
+        border-radius: 14px;
+        box-shadow: 0 3px 0 #E65100;
+      }
+
+      .hint-box {
+        font-size: 1.3rem;
+        min-height: 30px;
+        gap: 4px;
+      }
+
+      .hint-emoji {
+        font-size: 1.55rem;
+      }
+
+      #questionTargetArea {
+        margin-top: 6px !important;
+      }
+
+      /* 手機版直式注音方格等比例微縮（維持 1:2:3 嚴格比例以確保聲調對齊交界） */
+      .char-cell {
+        width: 58px;
+        height: 62px;
+        padding-right: 9px;
+        border-bottom-width: 1.5px;
+      }
+
+      .char-cell.has-neutral-tone {
+        padding-top: 7px;
+      }
+
+      .zhuyin-syllable-box.count-1 { height: 24px; }
+      .zhuyin-syllable-box.count-2 { height: 38px; }
+      .zhuyin-syllable-box.count-3 { height: 51px; }
+
+      .zhuyin-syllable-box.count-1 .sym-item { height: 24px; font-size: 1.25rem; }
+      .zhuyin-syllable-box.count-2 .sym-item { height: 19px; font-size: 1.04rem; }
+      .zhuyin-syllable-box.count-3 .sym-item { height: 17px; font-size: 0.9rem; }
+
+      .tone-neutral {
+        top: -9px;
+        font-size: 1.05rem;
+      }
+
+      .tone-side {
+        font-size: 1.05rem;
+        margin-left: 1px;
+      }
+
+      .missing-slot {
+        font-size: 0.9rem;
+        padding: 0 3px;
+      }
+
+      .missing-sym-slot {
+        font-size: 1.15rem;
+        padding: 1px 4px;
+      }
+
+      /* 若為 3 個字的語詞，在手機版進一步緊湊微縮，避免超出單頁高度 */
+      .word-grid-container.chars-3 .char-cell {
+        width: 52px;
+        height: 50px;
+      }
+
+      .word-grid-container.chars-3 .zhuyin-syllable-box.count-1 { height: 20px; }
+      .word-grid-container.chars-3 .zhuyin-syllable-box.count-2 { height: 32px; }
+      .word-grid-container.chars-3 .zhuyin-syllable-box.count-3 { height: 42px; }
+
+      .word-grid-container.chars-3 .zhuyin-syllable-box.count-1 .sym-item { height: 20px; font-size: 1.08rem; }
+      .word-grid-container.chars-3 .zhuyin-syllable-box.count-2 .sym-item { height: 16px; font-size: 0.92rem; }
+      .word-grid-container.chars-3 .zhuyin-syllable-box.count-3 .sym-item { height: 14px; font-size: 0.78rem; }
+
+      .options-grid {
+        gap: 8px;
+      }
+
+      .options-grid.cols-5 {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 6px;
+      }
+
+      .option-card {
+        padding: 6px 4px;
+        border-radius: 16px;
+        border-width: 3px;
+        box-shadow: 0 4px 0 #CBD5E0;
+        min-height: 76px;
+      }
+
+      .tone-option-label {
+        font-size: 1.45rem;
+        height: 30px;
+      }
+
+      .tone-option-name {
+        font-size: 0.72rem;
+        margin-top: 2px;
+      }
+
+      .feedback-banner {
+        margin-top: 6px;
+        font-size: 0.95rem;
+        min-height: 24px;
+      }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="brand-area">
-      <span class="brand-title">🚀 注音樂園</span>
-      <select class="unit-selector" id="unitSelect" onchange="changeUnitDropdown(this.value)">
-        <option value="unit_1_2">第一二單元</option>
-        <option value="unit_3">第三單元</option>
-        <option value="unit_4">第四單元</option>
-        <option value="unit_5">第五單元</option>
-        <option value="unit_6">第六單元</option>
-        <option value="unit_7" selected>第七單元</option>
-        <option value="all">全部單元</option>
-        <option value="custom">自訂跨單元</option>
-        <option value="mistakes">錯題本特訓</option>
-      </select>
-      <button class="btn-top" onclick="openCustomUnitModal()">➕ 跨單元組合</button>
-      <select class="count-selector" id="roundLengthSelect" onchange="changeRoundLength(this.value)">
-        <option value="5">每局 5 題</option>
-        <option value="10" selected>每局 10 題</option>
-        <option value="15">每局 15 題</option>
-        <option value="20">每局 20 題</option>
-      </select>
-    </div>
+    <div class="header-main-row">
+      <div class="brand-area">
+        <span class="brand-title">🚀 注音樂園</span>
+      </div>
 
-    <div class="top-controls">
-      <div class="score-pill">⭐ <span id="scoreVal">0</span>｜🔥 <span id="streakVal">0</span></div>
-      <button class="btn-top" id="challengeBtn" onclick="toggleChallengeMode()">🔥 挑戰：關</button>
-      <button class="btn-top active-hint" id="toggleHintBtn" onclick="toggleHint()">💡 提示：開</button>
-      <button class="btn-top mistake-btn" onclick="openMistakeModal()">📕 錯題本 (<span id="mistakeCount">0</span>)</button>
-      <button class="btn-top" onclick="openDatabaseModal()">⚙️ 詞庫</button>
+      <!-- 手機版常駐快捷列 -->
+      <div class="mobile-quick-actions">
+        <button class="btn-top history-btn" onclick="openHistoryModal()">📊 紀錄 (<span id="historyCount">0</span>)</button>
+        <button class="btn-top mistake-btn" onclick="openMistakeModal()">📕 錯題 (<span id="mistakeCount">0</span>)</button>
+        <button class="mobile-drawer-toggle" id="mobileDrawerBtn" onclick="toggleMobileDrawer()">⚙️ 設定 ▾</button>
+      </div>
+
+      <!-- 電腦版直接顯示 / 手機版點擊「⚙️ 設定」展開 -->
+      <div class="collapsible-controls" id="collapsibleControls">
+        <div class="brand-Selects" style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <select class="unit-selector" id="unitSelect" onchange="changeUnitDropdown(this.value)">
+            <option value="unit_1_2">第一二單元</option>
+            <option value="unit_3">第三單元</option>
+            <option value="unit_4">第四單元</option>
+            <option value="unit_5">第五單元</option>
+            <option value="unit_6">第六單元</option>
+            <option value="unit_7" selected>第七單元</option>
+            <option value="all">全部單元</option>
+            <option value="custom">自訂跨單元</option>
+            <option value="mistakes">錯題本特訓</option>
+          </select>
+          <button class="btn-top" onclick="openCustomUnitModal()">➕ 跨單元</button>
+          <select class="count-selector" id="roundLengthSelect" onchange="changeRoundLength(this.value)">
+            <option value="5">每局 5 題</option>
+            <option value="10" selected>每局 10 題</option>
+            <option value="15">每局 15 題</option>
+            <option value="20">每局 20 題</option>
+          </select>
+        </div>
+
+        <div class="top-controls">
+          <button class="btn-top" id="challengeBtn" onclick="toggleChallengeMode()">🔥 挑戰：關</button>
+          <button class="btn-top active-hint" id="toggleHintBtn" onclick="toggleHint()">💡 提示：開</button>
+          <button class="btn-top" onclick="openDatabaseModal()">⚙️ 詞庫</button>
+        </div>
+      </div>
     </div>
   </header>
 
   <div class="mode-tabs">
     <button class="mode-tab active" id="tab-listen" onclick="switchMode('listen')">🎧 1. 聽音選注音</button>
-    <button class="mode-tab" id="tab-tone" onclick="switchMode('tone')">🎩 2. 聲調與輕聲捕手</button>
-    <button class="mode-tab" id="tab-spell" onclick="switchMode('spell')">🧩 3. 缺字拼音挑戰</button>
+    <button class="mode-tab" id="tab-tone" onclick="switchMode('tone')">🎩 2. 聲調捕手</button>
+    <button class="mode-tab" id="tab-spell" onclick="switchMode('spell')">🧩 3. 缺字拼音</button>
   </div>
 
   <main>
@@ -689,18 +1030,20 @@
       <div class="stage-badges">
         <span id="currentScopeLabel">目前範圍：第七單元</span>
         <span class="round-status-pill" id="roundStatusPill">🎯 第 1 / 10 題（本局錯 0 題）</span>
-        <span class="badge-challenge-tag" id="challengeBadge">🔥 易混淆音挑戰模式啟動中</span>
+        <span class="badge-challenge-tag" id="challengeBadge">🔥 挑戰模式</span>
       </div>
       <div class="progress-bar-wrap">
         <div class="progress-bar-fill" id="progressBar"></div>
       </div>
       <div class="prompt-title" id="promptTitle">請點擊按鈕聽發音，選出正確的直式注音詞語！</div>
 
-      <button class="speaker-big-btn" onclick="speakCurrentWord()">
-        🔊 點擊聽發音
-      </button>
+      <div class="audio-hint-row">
+        <button class="speaker-big-btn" onclick="speakCurrentWord()">
+          🔊 點擊聽發音
+        </button>
+        <div class="hint-box" id="hintBox"></div>
+      </div>
 
-      <div class="hint-box" id="hintBox"></div>
       <div id="questionTargetArea" style="margin-top: 10px;"></div>
     </div>
 
@@ -714,31 +1057,51 @@
       <div class="result-big-icon" id="resultIcon">🏆</div>
       <div class="result-headline" id="resultHeadline">好棒棒！</div>
       <div class="result-subtext" id="resultSubtext">完成挑戰，全部答對 0 失誤！</div>
-      <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+      <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+        <button class="result-btn-secondary" onclick="openLatestHistoryFromResult()">📊 查看本局明細</button>
         <button class="result-btn-primary" id="playAgainBtn" onclick="startNextRound()">🔄 再玩一局</button>
       </div>
     </div>
   </div>
 
-  <!-- 2. 跨單元組合選擇視窗 -->
+  <!-- 2. 歷次練習紀錄視窗（含每題對錯與當下誤選答案明細） -->
+  <div class="modal-backdrop" id="historyModal">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#5B21B6;">
+        <span>📊 歷次練習紀錄（點擊任一局可展開考題與誤選明細）</span>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <button class="btn-top" id="historyResetTriggerBtn" style="background:#FEE2E2; color:#B91C1C; border-color:#EF4444;" onclick="showHistoryResetConfirm(true)">🗑️ 清空紀錄</button>
+          <div class="confirm-inline-group" id="historyResetConfirmBox" style="display:none;">
+            <span style="color:#B91C1C; font-size:0.9rem; font-weight:900;">⚠️ 確定清空？</span>
+            <button class="btn-top" style="background:#DC2626; color:white; border-color:#B91C1C; padding:4px 10px;" onclick="executeResetHistory()">確定清空</button>
+            <button class="btn-top" style="padding:4px 10px;" onclick="showHistoryResetConfirm(false)">取消</button>
+          </div>
+          <button class="btn-top" onclick="closeHistoryModal()">關閉</button>
+        </div>
+      </div>
+      <div class="modal-body" id="historyListContainer"></div>
+    </div>
+  </div>
+
+  <!-- 3. 跨單元組合選擇視窗 -->
   <div class="modal-backdrop" id="customUnitModal">
     <div class="modal-content" style="max-width: 540px;">
       <div class="modal-header">
         <span>📚 勾選要合併練習的單元</span>
         <button class="btn-top" onclick="applyCustomUnits()">套用並開始出題</button>
       </div>
-      <div style="padding: 14px 24px; background: #EFF6FF; color: #1E40AF; font-weight: 700; font-size: 0.95rem;">
-        💡 可自由勾選多個單元（例如同時複習第一二＋第三單元）：
+      <div style="padding: 12px 20px; background: #EFF6FF; color: #1E40AF; font-weight: 700; font-size: 0.92rem;">
+        💡 可自由勾選多個單元合併抽考：
       </div>
       <div class="modal-body" id="customUnitList" style="grid-template-columns: 1fr;"></div>
     </div>
   </div>
 
-  <!-- 3. 錯題本視窗（含防呆二次確認重置按鈕） -->
+  <!-- 4. 錯題本視窗（含防呆二次確認重置按鈕） -->
   <div class="modal-backdrop" id="mistakeModal">
     <div class="modal-content">
       <div class="modal-header">
-        <span>📕 錯題本紀錄（答錯過的題目會自動收錄）</span>
+        <span>📕 錯題本紀錄（答錯過的語詞自動收錄）</span>
         <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
           <button class="btn-top" id="mistakeResetTriggerBtn" style="background:#FEE2E2; color:#B91C1C; border-color:#EF4444;" onclick="showMistakeResetConfirm(true)">🗑️ 重置錯題本</button>
           <div class="confirm-inline-group" id="mistakeResetConfirmBox" style="display:none;">
@@ -754,7 +1117,7 @@
     </div>
   </div>
 
-  <!-- 4. 詞庫檢視與出題統計視窗（含防呆二次確認重置按鈕） -->
+  <!-- 5. 詞庫檢視與出題統計視窗（含防呆二次確認重置按鈕） -->
   <div class="modal-backdrop" id="dbModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -781,6 +1144,20 @@
       unit_5: "第五單元",
       unit_6: "第六單元",
       unit_7: "第七單元"
+    };
+
+    const MODE_NAMES = {
+      listen: "🎧 聽音選注音",
+      tone: "🎩 聲調與輕聲捕手",
+      spell: "🧩 缺字拼音挑戰"
+    };
+
+    const TONE_LABELS = {
+      "": "一聲 (不標號)",
+      "ˊ": "二聲 (ˊ)",
+      "ˇ": "三聲 (ˇ)",
+      "ˋ": "四聲 (ˋ)",
+      "˙": "輕聲 (˙)"
     };
 
     const DATABASE = {
@@ -983,27 +1360,32 @@
     let currentMode = "listen";
     let challengeMode = false;
     let showHint = true;
-    let score = 0;
-    let streak = 0;
 
     // 單局進度與不重複出題追蹤
     let roundQuestionIndex = 1;
     let roundMistakeCount = 0;
     let currentQuestionHadMistake = false;
-    let usedWordIdsInRound = new Set();        // 記錄本局已出現過的語詞 ID
-    let usedCharPositionsInRound = {};         // 記錄本局各語詞已考過的字元索引 { [wordId]: Set(charIdx) }
+    let usedWordIdsInRound = new Set();
+    let usedCharPositionsInRound = {};
+
+    // 當局作答明細紀錄（供歷次練習紀錄使用）
+    let currentRoundLogs = [];
+    let currentQuestionLog = null;
 
     let currentQuestion = null;
     let isLocked = false;
 
     let mistakeBook = {};
     let wordStats = {};
+    let practiceHistory = [];
 
     try {
       const savedMistakes = localStorage.getItem("zhuyin_mistake_book_v2");
       if (savedMistakes) mistakeBook = JSON.parse(savedMistakes);
       const savedStats = localStorage.getItem("zhuyin_word_stats_v2");
       if (savedStats) wordStats = JSON.parse(savedStats);
+      const savedHistory = localStorage.getItem("zhuyin_practice_history_v23");
+      if (savedHistory) practiceHistory = JSON.parse(savedHistory);
     } catch (e) {}
 
     function saveMistakes() {
@@ -1019,9 +1401,26 @@
       } catch (e) {}
     }
 
+    function savePracticeHistory() {
+      try {
+        localStorage.setItem("zhuyin_practice_history_v23", JSON.stringify(practiceHistory));
+      } catch (e) {}
+      updateHistoryCountUI();
+    }
+
     function updateMistakeCountUI() {
-      const count = Object.keys(mistakeBook).length;
-      document.getElementById("mistakeCount").textContent = count;
+      document.getElementById("mistakeCount").textContent = Object.keys(mistakeBook).length;
+    }
+
+    function updateHistoryCountUI() {
+      document.getElementById("historyCount").textContent = practiceHistory.length;
+    }
+
+    function toggleMobileDrawer() {
+      const drawer = document.getElementById("collapsibleControls");
+      const btn = document.getElementById("mobileDrawerBtn");
+      const isOpen = drawer.classList.toggle("mobile-open");
+      btn.textContent = isOpen ? "⚙️ 收合 ▴" : "⚙️ 設定 ▾";
     }
 
     function updateRoundStatusUI() {
@@ -1033,6 +1432,23 @@
 
     function getAllWordsFlat() {
       return Object.keys(DATABASE).flatMap(k => DATABASE[k]);
+    }
+
+    function formatCharsZhuyin(chars) {
+      return chars.map(c => c.s.join("") + (c.t || "")).join(" ");
+    }
+
+    function formatHighlightedWord(word, charIdx) {
+      return word.split("").map((ch, idx) => idx === charIdx ? `【${ch}】` : ch).join("");
+    }
+
+    function formatDateTime(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const d = String(dateObj.getDate()).padStart(2, "0");
+      const hh = String(dateObj.getHours()).padStart(2, "0");
+      const mm = String(dateObj.getMinutes()).padStart(2, "0");
+      return `${y}/${m}/${d} ${hh}:${mm}`;
     }
 
     // 合成音效引擎
@@ -1091,6 +1507,7 @@
 
     function renderWordGridHTML(chars, options = {}) {
       const { hideToneCharIndex = -1, hideSymbolCharIndex = -1 } = options;
+      const charLenClass = `chars-${chars.length}`;
 
       const cellsHTML = chars.map((ch, idx) => {
         const symCount = ch.s.length;
@@ -1130,7 +1547,7 @@
         `;
       }).join("");
 
-      return `<div class="word-grid-container">${cellsHTML}</div>`;
+      return `<div class="word-grid-container ${charLenClass}">${cellsHTML}</div>`;
     }
 
     function serializeChars(chars) {
@@ -1194,9 +1611,7 @@
 
     function getUnitList() {
       const allWords = getAllWordsFlat();
-      if (currentUnitKey === "all") {
-        return allWords;
-      }
+      if (currentUnitKey === "all") return allWords;
       if (currentUnitKey === "custom") {
         const filtered = allWords.filter(w => customSelectedUnits.includes(w.unit));
         return filtered.length > 0 ? filtered : allWords;
@@ -1214,18 +1629,16 @@
       return list.length >= 1 ? list : getUnitList();
     }
 
+    function getScopeShortName() {
+      if (currentUnitKey === "all") return "全部單元";
+      if (currentUnitKey === "custom") return customSelectedUnits.map(k => UNIT_META[k]).join("＋");
+      if (currentUnitKey === "mistakes") return "錯題本特訓";
+      return UNIT_META[currentUnitKey] || "第七單元";
+    }
+
     function updateScopeLabel() {
       const labelEl = document.getElementById("currentScopeLabel");
-      if (currentUnitKey === "all") {
-        labelEl.textContent = "目前範圍：全部單元";
-      } else if (currentUnitKey === "custom") {
-        const names = customSelectedUnits.map(k => UNIT_META[k]);
-        labelEl.textContent = `目前範圍：${names.join("＋")}`;
-      } else if (currentUnitKey === "mistakes") {
-        labelEl.textContent = `目前範圍：📕 錯題本特訓 (${Object.keys(mistakeBook).length}詞)`;
-      } else {
-        labelEl.textContent = `目前範圍：${UNIT_META[currentUnitKey] || ""}`;
-      }
+      labelEl.textContent = `範圍：${getScopeShortName()}`;
     }
 
     function shuffle(arr) {
@@ -1243,6 +1656,8 @@
       currentQuestionHadMistake = false;
       usedWordIdsInRound.clear();
       usedCharPositionsInRound = {};
+      currentRoundLogs = [];
+      currentQuestionLog = null;
       updateRoundStatusUI();
     }
 
@@ -1300,18 +1715,10 @@
       if (showHint) {
         box.innerHTML = `<span class="hint-emoji">${currentQuestion.emoji}</span> <span>${currentQuestion.word}</span>`;
       } else {
-        box.innerHTML = `<span class="hint-emoji">${currentQuestion.emoji}</span> <span style="color:#94A3B8; font-size:1.1rem;">（純聽音挑戰）</span>`;
+        box.innerHTML = `<span class="hint-emoji">${currentQuestion.emoji}</span> <span style="color:#94A3B8; font-size:0.95rem;">（純聽音）</span>`;
       }
     }
 
-    /**
-     * 智慧不重複抽題演算法：
-     * - 模式 1 (listen)：優先抽本局未考過的語詞；若詞庫數小於本局題數且全數考完，才重置本局語詞池。
-     * - 模式 2/3 (tone / spell)：
-     *   第一優先：本局完全還沒出現過的語詞（隨機挑一個字考）。
-     *   第二優先：本局曾出現過、但該語詞裡還有「其他字」沒考過的語詞（只考還沒考過的那個字，絕不重複考同一個字）。
-     *   若連所有語詞的所有字都考完了（例如只勾選 2 個詞卻選 20 題），才清空字元紀錄重新一輪。
-     */
     function pickNextQuestionTarget(activePool) {
       if (currentMode === "listen") {
         let unusedWords = activePool.filter(w => !usedWordIdsInRound.has(w.id));
@@ -1323,7 +1730,6 @@
         usedWordIdsInRound.add(pickedWord.id);
         return { targetItem: pickedWord, charIdx: -1 };
       } else {
-        // 找出完全未出現過的詞
         const completelyFreshWords = activePool.filter(w => {
           const usedSet = usedCharPositionsInRound[w.id];
           return !usedSet || usedSet.size === 0;
@@ -1332,7 +1738,6 @@
         let candidateWords = completelyFreshWords;
 
         if (candidateWords.length === 0) {
-          // 找出還有「尚未考過的字」的詞（例如「紅花」考過「紅」，還剩「花」可考）
           const partiallyUsedWords = activePool.filter(w => {
             const usedSet = usedCharPositionsInRound[w.id];
             return usedSet && usedSet.size < w.chars.length;
@@ -1340,7 +1745,6 @@
           candidateWords = partiallyUsedWords;
         }
 
-        // 若所有啟用詞的所有字都已經考過一輪，才重置字元紀錄
         if (candidateWords.length === 0) {
           usedCharPositionsInRound = {};
           candidateWords = activePool;
@@ -1391,11 +1795,21 @@
         speakText: targetItem.word
       };
 
+      const fullWordZhuyin = formatCharsZhuyin(targetItem.chars);
+
       if (currentMode === "listen") {
         document.getElementById("promptTitle").textContent = challengeMode
-          ? "🔥 【挑戰】請點擊聽發音，仔細分辨平翹舌與鼻音！"
-          : "🎧 請點擊按鈕聽發音，點選正確的「直式注音詞語」！";
+          ? "🔥 【挑戰】點擊聽發音，分辨平翹舌與鼻音！"
+          : "🎧 點擊按鈕聽發音，選出正確的「直式注音」！";
         targetArea.innerHTML = "";
+
+        currentQuestionLog = {
+          qNum: roundQuestionIndex,
+          emoji: targetItem.emoji,
+          title: `${targetItem.word}`,
+          correctDesc: `<${fullWordZhuyin}>`,
+          wrongPicks: []
+        };
 
         let choices = [];
         if (challengeMode) {
@@ -1411,23 +1825,36 @@
           const card = document.createElement("div");
           card.className = "option-card";
           card.innerHTML = renderWordGridHTML(choice.chars);
-          card.onclick = () => checkAnswer(card, choice.isCorrect === true, targetItem);
+          const choiceZhuyin = formatCharsZhuyin(choice.chars);
+          const pickedLabel = choice.isTrap
+            ? `易混淆音 <${choiceZhuyin}>`
+            : `${choice.word} <${choiceZhuyin}>`;
+          card.onclick = () => checkAnswer(card, choice.isCorrect === true, targetItem, null, pickedLabel);
           optionsGrid.appendChild(card);
         });
 
       } else if (currentMode === "tone") {
         document.getElementById("promptTitle").textContent = "🎩 請問紅色問號「？」應該標上哪一個聲調？";
         const correctTone = targetItem.chars[charIdx].t;
+        const charZhuyin = targetItem.chars[charIdx].s.join("") + (correctTone || "");
+
+        currentQuestionLog = {
+          qNum: roundQuestionIndex,
+          emoji: targetItem.emoji,
+          title: `${formatHighlightedWord(targetItem.word, charIdx)}（${fullWordZhuyin}）`,
+          correctDesc: `${TONE_LABELS[correctTone]} [ ${charZhuyin} ]`,
+          wrongPicks: []
+        };
 
         targetArea.innerHTML = renderWordGridHTML(targetItem.chars, { hideToneCharIndex: charIdx });
         optionsGrid.classList.add("cols-5");
 
         const tones = [
-          { t: "", label: "一聲", desc: "（不標號）" },
+          { t: "", label: "一聲", desc: "不標號" },
           { t: "ˊ", label: "ˊ", desc: "二聲" },
           { t: "ˇ", label: "ˇ", desc: "三聲" },
           { t: "ˋ", label: "ˋ", desc: "四聲" },
-          { t: "˙", label: "˙", desc: "輕聲（上方點）" }
+          { t: "˙", label: "˙", desc: "輕聲" }
         ];
 
         tones.forEach(td => {
@@ -1437,19 +1864,29 @@
             <div class="tone-option-label">${td.label}</div>
             <div class="tone-option-name">${td.desc}</div>
           `;
+          const pickedLabel = TONE_LABELS[td.t];
           card.onclick = () => checkAnswer(card, td.t === correctTone, targetItem, () => {
             targetArea.innerHTML = renderWordGridHTML(targetItem.chars);
-          });
+          }, pickedLabel);
           optionsGrid.appendChild(card);
         });
 
       } else if (currentMode === "spell") {
         document.getElementById("promptTitle").textContent = challengeMode
-          ? "🔥 【挑戰】小心易混淆符號！請選出正確的缺字注音！"
-          : "🧩 缺字拼音挑戰：請選出正確的注音把詞語補完！";
+          ? "🔥 【挑戰】小心易混淆音！選出正確的缺字注音！"
+          : "🧩 缺字拼音挑戰：選出正確的注音把詞語補完！";
 
         const answerChar = targetItem.chars[charIdx];
         const answerKey = answerChar.s.join("") + (answerChar.t || "_");
+        const answerDisplay = answerChar.s.join("") + (answerChar.t || "");
+
+        currentQuestionLog = {
+          qNum: roundQuestionIndex,
+          emoji: targetItem.emoji,
+          title: `${formatHighlightedWord(targetItem.word, charIdx)}（${fullWordZhuyin}）`,
+          correctDesc: `<${answerDisplay}>`,
+          wrongPicks: []
+        };
 
         targetArea.innerHTML = renderWordGridHTML(targetItem.chars, {
           hideSymbolCharIndex: charIdx,
@@ -1475,21 +1912,21 @@
 
         charChoices.forEach(ch => {
           const k = ch.s.join("") + (ch.t || "_");
+          const chDisplay = ch.s.join("") + (ch.t || "");
           const card = document.createElement("div");
           card.className = "option-card";
           card.innerHTML = renderWordGridHTML([ch]);
           card.onclick = () => checkAnswer(card, k === answerKey, targetItem, () => {
             targetArea.innerHTML = renderWordGridHTML(targetItem.chars);
-          });
+          }, `<${chDisplay}>`);
           optionsGrid.appendChild(card);
         });
       }
 
       renderHintBox();
-      // 依據設定：切換遊戲或新一題載入時不自動發音，點擊按鈕才發音
     }
 
-    function checkAnswer(cardElement, isCorrect, targetItem, onReveal) {
+    function checkAnswer(cardElement, isCorrect, targetItem, onReveal, pickedLabel) {
       if (isLocked) return;
       const banner = document.getElementById("feedbackBanner");
 
@@ -1497,14 +1934,13 @@
         isLocked = true;
         cardElement.classList.add("correct");
         playSound("correct");
-        score += challengeMode ? 15 : 10;
-        streak += 1;
 
         wordStats[targetItem.id] = (wordStats[targetItem.id] || 0) + 1;
         saveWordStats();
 
-        document.getElementById("scoreVal").textContent = score;
-        document.getElementById("streakVal").textContent = streak;
+        if (currentQuestionLog) {
+          currentRoundLogs.push(currentQuestionLog);
+        }
 
         banner.style.color = "#15803D";
         banner.textContent = `🎉 答對了！就是「${targetItem.word}」！`;
@@ -1517,13 +1953,15 @@
             roundQuestionIndex += 1;
             nextQuestion();
           }
-        }, 1250);
+        }, 1200);
 
       } else {
         cardElement.classList.add("wrong");
         playSound("wrong");
-        streak = 0;
-        document.getElementById("streakVal").textContent = streak;
+
+        if (currentQuestionLog && pickedLabel) {
+          currentQuestionLog.wrongPicks.push(pickedLabel);
+        }
 
         if (!currentQuestionHadMistake) {
           currentQuestionHadMistake = true;
@@ -1535,13 +1973,32 @@
         saveMistakes();
 
         banner.style.color = "#DC2626";
-        banner.textContent = `💪 已加入錯題本！可點擊上方橘色按鈕聽「${targetItem.word}」的發音喔！`;
+        banner.textContent = `💪 已記下錯題！可點上方橘色按鈕聽「${targetItem.word}」發音喔！`;
       }
     }
 
-    // 單局結束結算成績單
+    // 單局結束：寫入練習紀錄並顯示結算成績單
     function showRoundResultModal() {
       playSound("fanfare");
+
+      const newRecord = {
+        id: Date.now(),
+        timeStr: formatDateTime(new Date()),
+        modeName: MODE_NAMES[currentMode] || currentMode,
+        scopeName: getScopeShortName(),
+        total: questionsPerRound,
+        correctCount: questionsPerRound - roundMistakeCount,
+        wrongCount: roundMistakeCount,
+        challenge: challengeMode,
+        logs: [...currentRoundLogs]
+      };
+
+      practiceHistory.unshift(newRecord);
+      if (practiceHistory.length > 50) {
+        practiceHistory = practiceHistory.slice(0, 50);
+      }
+      savePracticeHistory();
+
       const iconEl = document.getElementById("resultIcon");
       const headEl = document.getElementById("resultHeadline");
       const subEl = document.getElementById("resultSubtext");
@@ -1552,26 +2009,118 @@
         iconEl.textContent = "🏆";
         headEl.textContent = "好棒棒！";
         headEl.style.color = "#16A34A";
-        subEl.textContent = `${questionsPerRound} 題全部答對、零失誤！太神啦！`;
+        subEl.textContent = `${questionsPerRound} 題全部一次答對、零失誤！`;
       } else if (roundMistakeCount <= 2) {
         iconEl.textContent = "🌟";
         headEl.textContent = "好厲害！";
         headEl.style.color = "#2563EB";
-        subEl.textContent = `完成 ${questionsPerRound} 題挑戰，只錯了 ${roundMistakeCount} 題，表現超棒！`;
+        subEl.textContent = `完成 ${questionsPerRound} 題挑戰，答對 ${questionsPerRound - roundMistakeCount} 題、錯 ${roundMistakeCount} 題！`;
       } else {
         iconEl.textContent = "💪";
         headEl.textContent = "加油加油！";
         headEl.style.color = "#D97706";
-        subEl.textContent = `完成 ${questionsPerRound} 題挑戰（本局錯 ${roundMistakeCount} 題），再練一次會更熟喔！`;
+        subEl.textContent = `完成 ${questionsPerRound} 題挑戰（答對 ${questionsPerRound - roundMistakeCount} 題 / 錯 ${roundMistakeCount} 題）！`;
       }
 
       document.getElementById("roundResultModal").classList.add("open");
+    }
+
+    function openLatestHistoryFromResult() {
+      document.getElementById("roundResultModal").classList.remove("open");
+      resetRoundCounters();
+      nextQuestion();
+      openHistoryModal(0);
     }
 
     function startNextRound() {
       document.getElementById("roundResultModal").classList.remove("open");
       resetRoundCounters();
       nextQuestion();
+    }
+
+    // =========================================
+    // 📊 歷次練習紀錄 Modal（含展開當下誤選答案）
+    // =========================================
+    function showHistoryResetConfirm(show) {
+      document.getElementById("historyResetTriggerBtn").style.display = show ? "none" : "inline-block";
+      document.getElementById("historyResetConfirmBox").style.display = show ? "inline-flex" : "none";
+    }
+
+    function openHistoryModal(autoExpandIndex = -1) {
+      showHistoryResetConfirm(false);
+      const container = document.getElementById("historyListContainer");
+      container.innerHTML = "";
+
+      if (practiceHistory.length === 0) {
+        container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 30px; color:#64748B; font-size:1.1rem; font-weight:700;">
+          📭 目前還沒有完成的練習紀錄喔！<br/><small style="color:#94A3B8">每完成一局挑戰，系統就會自動把考題與作答明細記錄在這裡。</small>
+        </div>`;
+      } else {
+        practiceHistory.forEach((rec, idx) => {
+          const card = document.createElement("div");
+          card.className = `history-card ${idx === autoExpandIndex ? "expanded" : ""}`;
+
+          const badgeColor = rec.wrongCount === 0
+            ? "background:#DCFCE7; color:#15803D; border:1.5px solid #86EFAC;"
+            : "background:#FEF2F2; color:#B91C1C; border:1.5px solid #FECACA;";
+
+          const detailsHTML = (rec.logs || []).map(log => {
+            const isClean = !log.wrongPicks || log.wrongPicks.length === 0;
+            if (isClean) {
+              return `
+                <div class="history-q-item pass">
+                  ✅ 第 ${log.qNum} 題：${log.emoji} ${log.title} ➔ 正確：${log.correctDesc}
+                </div>
+              `;
+            } else {
+              const wrongStr = log.wrongPicks.join(" ➔ ");
+              return `
+                <div class="history-q-item fail">
+                  <div>❌ 第 ${log.qNum} 題：${log.emoji} ${log.title}</div>
+                  <div style="margin-top:3px; font-size:0.88rem; color:#1E40AF;"> ├ 正確答案：<strong>${log.correctDesc}</strong></div>
+                  <div style="font-size:0.88rem; color:#DC2626;"> └ 當下誤選：<strong>${wrongStr}</strong></div>
+                </div>
+              `;
+            }
+          }).join("");
+
+          card.innerHTML = `
+            <div class="history-summary-row" onclick="this.parentElement.classList.toggle('expanded')">
+              <div>
+                <div style="font-weight:900; color:#1E293B; font-size:0.98rem;">
+                  📅 ${rec.timeStr} ｜ ${rec.modeName} ${rec.challenge ? "🔥" : ""}
+                </div>
+                <div style="font-size:0.85rem; color:#64748B; font-weight:700; margin-top:2px;">
+                  範圍：${rec.scopeName}（共 ${rec.total} 題）
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="padding:4px 10px; border-radius:999px; font-size:0.85rem; font-weight:900; ${badgeColor}">
+                  答對 ${rec.correctCount} 題 / 答錯 ${rec.wrongCount} 題
+                </span>
+                <span style="color:#6D28D9; font-size:0.85rem; font-weight:900;">明細 ▾</span>
+              </div>
+            </div>
+            <div class="history-detail-list">
+              ${detailsHTML}
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      }
+
+      document.getElementById("historyModal").classList.add("open");
+    }
+
+    function executeResetHistory() {
+      practiceHistory = [];
+      savePracticeHistory();
+      showHistoryResetConfirm(false);
+      openHistoryModal();
+    }
+
+    function closeHistoryModal() {
+      document.getElementById("historyModal").classList.remove("open");
     }
 
     // 跨單元組合 Modal
@@ -1637,7 +2186,7 @@
         mistakeIds.forEach(id => {
           const item = allWords.find(w => w.id === id);
           if (!item) return;
-          const zhuyinStr = item.chars.map(c => c.s.join("") + (c.t || "")).join(" ");
+          const zhuyinStr = formatCharsZhuyin(item.chars);
           const errCount = mistakeBook[id];
           const div = document.createElement("div");
           div.className = "word-toggle-item";
@@ -1695,7 +2244,7 @@
       container.innerHTML = "";
       const list = getUnitList();
       list.forEach((item, index) => {
-        const zhuyinStr = item.chars.map(c => c.s.join("") + (c.t || "")).join(" ");
+        const zhuyinStr = formatCharsZhuyin(item.chars);
         const testedCount = wordStats[item.id] || 0;
         const div = document.createElement("label");
         div.className = "word-toggle-item";
@@ -1732,6 +2281,7 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       updateMistakeCountUI();
+      updateHistoryCountUI();
       updateScopeLabel();
       updateRoundStatusUI();
       nextQuestion();
