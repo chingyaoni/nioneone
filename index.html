@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>注音大冒險 V2.6 - 全學期互動題庫與字卡</title>
+  <title>注音大冒險 V2.7 - 全學期互動題庫與字卡</title>
   <style>
     :root {
       --primary: #3B82F6;
@@ -54,7 +54,6 @@
       flex-wrap: wrap;
     }
 
-    /* 左上角區塊：由左到右 Logo -> 選單元 -> 跨單元 -> 每局幾題 */
     .brand-area {
       display: flex;
       align-items: center;
@@ -96,7 +95,6 @@
       outline: none;
     }
 
-    /* 手機專用收合按鈕（電腦/iPad 隱藏） */
     .mobile-drawer-toggle {
       display: none;
       background: #EFF6FF;
@@ -110,7 +108,6 @@
       white-space: nowrap;
     }
 
-    /* 右上角區塊：由左到右 紀錄 -> 錯題 -> 挑戰開關 -> 提示開關 -> 詞庫 */
     .top-controls {
       display: flex;
       align-items: center;
@@ -160,7 +157,6 @@
       color: #6D28D9;
     }
 
-    /* 模式切換列 */
     .mode-tabs {
       display: flex;
       justify-content: center;
@@ -319,7 +315,7 @@
     }
 
     /* =========================================
-       國小標準「直式注音方格」與精準聲調定位引擎
+       國小標準直式注音方格
        ========================================= */
     .word-grid-container {
       display: inline-flex;
@@ -388,7 +384,6 @@
     .zhuyin-syllable-box.count-2 .sym-item { height: 29px; font-size: 1.58rem; }
     .zhuyin-syllable-box.count-3 .sym-item { height: 24.66px; font-size: 1.32rem; }
 
-    /* 輕聲點：精準置於第一個注音符號正上方 */
     .tone-neutral {
       position: absolute;
       top: -14px;
@@ -401,7 +396,6 @@
       z-index: 2;
     }
 
-    /* 右側聲調（二、三、四聲）：依音節數精準定位 */
     .tone-side {
       position: absolute;
       left: 100%;
@@ -415,11 +409,8 @@
       white-space: nowrap;
     }
 
-    /* 1 個注音：正中間 (50%) */
     .tone-side.pos-1 { top: 50%; }
-    /* 2 個注音：下移校正至 60%，讓聲調筆畫正中切齊十字方格中央水平格線 */
     .tone-side.pos-2 { top: 60%; }
-    /* 3 個注音：第 2（介音）與第 3（韻母）交界線正中間 (66.67%) - 維持不變 */
     .tone-side.pos-3 { top: 66.67%; }
 
     .missing-slot {
@@ -446,9 +437,7 @@
       font-size: 1.6rem;
     }
 
-    /* =========================================
-       📖 第 4 模式：複習字卡（上下直式國字＋旁邊注音）
-       ========================================= */
+    /* 複習字卡樣式 */
     .flashcard-wrapper {
       display: flex;
       flex-direction: column;
@@ -476,10 +465,6 @@
       cursor: pointer;
     }
 
-    .btn-mini-order:active {
-      transform: scale(0.95);
-    }
-
     .flashcard-body {
       background: linear-gradient(180deg, #FFFFFF 0%, #FFFBEB 100%);
       border: 4px solid #F59E0B;
@@ -491,12 +476,7 @@
       align-items: center;
       gap: 12px;
       cursor: pointer;
-      transition: transform 0.12s;
       min-width: 240px;
-    }
-
-    .flashcard-body:active {
-      transform: scale(0.98);
     }
 
     .flashcard-emoji {
@@ -505,7 +485,6 @@
       filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08));
     }
 
-    /* 國字＋直式注音：由上而下垂直排列 */
     .flashcard-vertical-word {
       display: inline-flex;
       flex-direction: column;
@@ -542,7 +521,6 @@
       font-family: "DFKai-SB", "BiauKai", "Kaiti TC", "STKaiti", "PingFang TC", serif;
     }
 
-    /* 國字格內的淡十字米字輔助線 */
     .kanji-cell::before {
       content: "";
       position: absolute;
@@ -583,7 +561,6 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: all 0.12s;
     }
 
     .btn-card-nav:active:not(:disabled) {
@@ -604,11 +581,6 @@
       box-shadow: 0 5px 0 #334155;
     }
 
-    .btn-card-nav.prev-btn:active:not(:disabled) {
-      box-shadow: 0 2px 0 #334155;
-    }
-
-    /* 選項卡片區 */
     .options-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -684,7 +656,7 @@
     }
 
     /* =========================================
-       歷史練習紀錄卡片樣式
+       歷史練習紀錄樣式
        ========================================= */
     .history-card {
       grid-column: 1 / -1;
@@ -692,7 +664,7 @@
       border-radius: 16px;
       background: #F8FAFC;
       overflow: hidden;
-      transition: border-color 0.15s;
+      margin-bottom: 4px;
     }
 
     .history-card.expanded {
@@ -747,7 +719,9 @@
       color: #991B1B;
     }
 
-    /* Modals */
+    /* =========================================
+       彈出視窗（已修復 iPadOS 捲動鎖死與高度截斷）
+       ========================================= */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -766,7 +740,7 @@
       border-radius: 26px;
       max-width: 860px;
       width: 100%;
-      max-height: 86vh;
+      max-height: 88vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -784,11 +758,16 @@
       font-weight: 800;
       flex-wrap: wrap;
       gap: 10px;
+      flex-shrink: 0;
     }
 
+    /* 關鍵修復：啟用 iOS/iPadOS 彈性高度與流暢捲動 */
     .modal-body {
       padding: 16px 20px;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      flex: 1 1 auto;
+      min-height: 0;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
       gap: 10px;
@@ -909,14 +888,13 @@
     }
 
     /* ==========================================================
-       📱 iPhone 15 Pro 專屬一頁式緊湊響應式版面 (寬度 <= 600px)
+       📱 手機版 (iPhone 15 Pro) 緊湊響應式
        ========================================================== */
     @media (max-width: 600px) {
       header {
         padding: 6px 8px;
       }
 
-      /* 左上角常駐列：Logo + 選單元 + 跨單元 + 每局幾題 + 收合鈕 */
       .brand-area {
         width: 100%;
         justify-content: space-between;
@@ -950,7 +928,6 @@
         border-radius: 9px;
       }
 
-      /* 右上角 5 個按鈕（紀錄/錯題/挑戰/提示/詞庫）在手機版整合進收合抽屜 */
       .top-controls {
         display: none;
         width: 100%;
@@ -973,7 +950,6 @@
         border-radius: 10px;
       }
 
-      /* 四大模式單行緊湊排列 */
       .mode-tabs {
         padding: 6px 8px 2px;
         gap: 4px;
@@ -1022,7 +998,6 @@
         margin-bottom: 6px;
       }
 
-      /* 發音按鈕與詞語提示同行並排，節省垂直空間 */
       .audio-hint-row {
         flex-direction: row;
         flex-wrap: wrap;
@@ -1051,7 +1026,6 @@
         margin-top: 6px !important;
       }
 
-      /* 手機版直式注音方格等比例微縮（維持 1:2:3 嚴格比例確保聲調對齊交界） */
       .char-cell {
         width: 58px;
         height: 62px;
@@ -1091,7 +1065,6 @@
         padding: 1px 4px;
       }
 
-      /* 若為 3 個字的語詞，在手機版進一步緊湊微縮，避免超出單頁高度 */
       .word-grid-container.chars-3 .char-cell {
         width: 52px;
         height: 50px;
@@ -1105,7 +1078,6 @@
       .word-grid-container.chars-3 .zhuyin-syllable-box.count-2 .sym-item { height: 16px; font-size: 0.92rem; }
       .word-grid-container.chars-3 .zhuyin-syllable-box.count-3 .sym-item { height: 14px; font-size: 0.78rem; }
 
-      /* 手機版：複習字卡尺寸自動優化，確保一頁免滑動 */
       .flashcard-wrapper {
         gap: 10px;
       }
@@ -1132,7 +1104,6 @@
         height: 68px;
       }
 
-      /* 3 個字字卡在手機版稍微再縮減高度 */
       .flashcard-vertical-word.chars-3 .kanji-cell {
         width: 60px;
         height: 58px;
@@ -1189,7 +1160,6 @@
 
   <header>
     <div class="header-main-row">
-      <!-- 左上角區塊（電腦與手機皆直接顯示）：由左到右 Logo -> 選單元 -> 跨單元 -> 每局幾題 -->
       <div class="brand-area">
         <span class="brand-title">🚀 注音樂園</span>
         <select class="unit-selector" id="unitSelect" onchange="changeUnitDropdown(this.value)">
@@ -1206,16 +1176,14 @@
         <button class="btn-top" onclick="openCustomUnitModal()">➕ 跨單元</button>
         <select class="count-selector" id="roundLengthSelect" onchange="changeRoundLength(this.value)">
           <option value="5">每局 5 題</option>
-          <option value="10" selected>每局 10 題</option>
+          <option value="10">每局 10 題</option>
           <option value="15">每局 15 題</option>
           <option value="20">每局 20 題</option>
           <option value="all_unit">整個單元</option>
         </select>
-        <!-- 手機版專用收合觸發鈕 -->
         <button class="mobile-drawer-toggle" id="mobileDrawerBtn" onclick="toggleMobileDrawer()">⚙️ 選單 ▾</button>
       </div>
 
-      <!-- 右上角區塊（電腦直接顯示 / 手機收合進 ⚙️ 選單）：由左到右 紀錄 -> 錯題 -> 挑戰 -> 提示 -> 詞庫 -->
       <div class="top-controls" id="collapsibleControls">
         <button class="btn-top history-btn" onclick="openHistoryModal()">📊 紀錄 (<span id="historyCount">0</span>)</button>
         <button class="btn-top mistake-btn" onclick="openMistakeModal()">📕 錯題 (<span id="mistakeCount">0</span>)</button>
@@ -1272,7 +1240,7 @@
     </div>
   </div>
 
-  <!-- 2. 歷次練習紀錄視窗（含每題對錯與當下誤選答案明細） -->
+  <!-- 2. 歷次練習紀錄視窗 -->
   <div class="modal-backdrop" id="historyModal">
     <div class="modal-content">
       <div class="modal-header" style="background:#5B21B6;">
@@ -1305,7 +1273,7 @@
     </div>
   </div>
 
-  <!-- 4. 錯題本視窗（含防呆二次確認重置按鈕） -->
+  <!-- 4. 錯題本視窗 -->
   <div class="modal-backdrop" id="mistakeModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -1325,7 +1293,7 @@
     </div>
   </div>
 
-  <!-- 5. 詞庫檢視與出題統計視窗（含防呆二次確認重置按鈕） -->
+  <!-- 5. 詞庫管理視窗 -->
   <div class="modal-backdrop" id="dbModal">
     <div class="modal-content">
       <div class="modal-header">
@@ -1370,7 +1338,6 @@
     };
 
     const DATABASE = {
-      // 第一、二單元（18 詞：貓咪的咪為一聲、弟弟為 ㄉㄧˋ ㄉㄧ˙）
       unit_1_2: [
         { id: 101, unit: "unit_1_2", word: "貓咪",   emoji: "🐱", enabled: true, chars: [{ s: ["ㄇ","ㄠ"], t: "" },     { s: ["ㄇ","ㄧ"], t: "" }] },
         { id: 102, unit: "unit_1_2", word: "弟弟",   emoji: "👦", enabled: true, chars: [{ s: ["ㄉ","ㄧ"], t: "ˋ" },    { s: ["ㄉ","ㄧ"], t: "˙" }] },
@@ -1391,8 +1358,6 @@
         { id: 117, unit: "unit_1_2", word: "跑第一", emoji: "🏃", enabled: true, chars: [{ s: ["ㄆ","ㄠ"], t: "ˇ" },    { s: ["ㄉ","ㄧ"], t: "ˋ" }, { s: ["ㄧ"], t: "" }] },
         { id: 118, unit: "unit_1_2", word: "鵝寶寶", emoji: "🪿", enabled: true, chars: [{ s: ["ㄜ"], t: "ˊ" },         { s: ["ㄅ","ㄠ"], t: "ˇ" }, { s: ["ㄅ","ㄠ"], t: "ˇ" }] }
       ],
-
-      // 第三單元（23 詞）
       unit_3: [
         { id: 301, unit: "unit_3", word: "河馬",   emoji: "🦛", enabled: true, chars: [{ s: ["ㄏ","ㄜ"], t: "ˊ" },     { s: ["ㄇ","ㄚ"], t: "ˇ" }] },
         { id: 302, unit: "unit_3", word: "河狸",   emoji: "🦫", enabled: true, chars: [{ s: ["ㄏ","ㄜ"], t: "ˊ" },     { s: ["ㄌ","ㄧ"], t: "ˊ" }] },
@@ -1418,8 +1383,6 @@
         { id: 322, unit: "unit_3", word: "早安",   emoji: "☀️", enabled: true, chars: [{ s: ["ㄗ","ㄠ"], t: "ˇ" },     { s: ["ㄢ"], t: "" }] },
         { id: 323, unit: "unit_3", word: "彈珠",   emoji: "🔮", enabled: true, chars: [{ s: ["ㄊ","ㄢ"], t: "ˊ" },     { s: ["ㄓ","ㄨ"], t: "" }] }
       ],
-
-      // 第四單元（24 詞）
       unit_4: [
         { id: 401, unit: "unit_4", word: "書包",   emoji: "🎒", enabled: true, chars: [{ s: ["ㄕ","ㄨ"], t: "" },     { s: ["ㄅ","ㄠ"], t: "" }] },
         { id: 402, unit: "unit_4", word: "歡喜",   emoji: "😊", enabled: true, chars: [{ s: ["ㄏ","ㄨ","ㄢ"], t: "" }, { s: ["ㄒ","ㄧ"], t: "ˇ" }] },
@@ -1446,8 +1409,6 @@
         { id: 423, unit: "unit_4", word: "笑嘻嘻", emoji: "😄", enabled: true, chars: [{ s: ["ㄒ","ㄧ","ㄠ"], t: "ˋ" }, { s: ["ㄒ","ㄧ"], t: "" }, { s: ["ㄒ","ㄧ"], t: "" }] },
         { id: 424, unit: "unit_4", word: "手拉手", emoji: "🤝", enabled: true, chars: [{ s: ["ㄕ","ㄡ"], t: "ˇ" },    { s: ["ㄌ","ㄚ"], t: "" }, { s: ["ㄕ","ㄡ"], t: "ˇ" }] }
       ],
-
-      // 第五單元（21 詞：骨頭的「頭」為輕聲 ㄍㄨˇ ㄊㄡ˙）
       unit_5: [
         { id: 501, unit: "unit_5", word: "翹翹板", emoji: "🎢", enabled: true, chars: [{ s: ["ㄑ","ㄧ","ㄠ"], t: "ˋ" }, { s: ["ㄑ","ㄧ","ㄠ"], t: "ˋ" }, { s: ["ㄅ","ㄢ"], t: "ˇ" }] },
         { id: 502, unit: "unit_5", word: "好朋友", emoji: "👫", enabled: true, chars: [{ s: ["ㄏ","ㄠ"], t: "ˇ" },     { s: ["ㄆ","ㄥ"], t: "ˊ" },      { s: ["ㄧ","ㄡ"], t: "ˇ" }] },
@@ -1471,8 +1432,6 @@
         { id: 520, unit: "unit_5", word: "相機",   emoji: "📷", enabled: true, chars: [{ s: ["ㄒ","ㄧ","ㄤ"], t: "ˋ" }, { s: ["ㄐ","ㄧ"], t: "" }] },
         { id: 521, unit: "unit_5", word: "跳繩",   emoji: "🪢", enabled: true, chars: [{ s: ["ㄊ","ㄧ","ㄠ"], t: "ˋ" }, { s: ["ㄕ","ㄥ"], t: "ˊ" }] }
       ],
-
-      // 第六單元（24 詞：耶誕卡的「耶」為二聲 ㄧㄝˊ）
       unit_6: [
         { id: 601, unit: "unit_6", word: "老師",   emoji: "👩‍🏫", enabled: true, chars: [{ s: ["ㄌ","ㄠ"], t: "ˇ" },     { s: ["ㄕ"], t: "" }] },
         { id: 602, unit: "unit_6", word: "紅花",   emoji: "🌺", enabled: true, chars: [{ s: ["ㄏ","ㄨ","ㄥ"], t: "ˊ" }, { s: ["ㄏ","ㄨ","ㄚ"], t: "" }] },
@@ -1499,8 +1458,6 @@
         { id: 623, unit: "unit_6", word: "鳥窩",   emoji: "🪺", enabled: true, chars: [{ s: ["ㄋ","ㄧ","ㄠ"], t: "ˇ" }, { s: ["ㄨ","ㄛ"], t: "" }] },
         { id: 624, unit: "unit_6", word: "耶誕卡", emoji: "🎄", enabled: true, chars: [{ s: ["ㄧ","ㄝ"], t: "ˊ" },     { s: ["ㄉ","ㄢ"], t: "ˋ" }, { s: ["ㄎ","ㄚ"], t: "ˇ" }] }
       ],
-
-      // 第七單元（21 詞：睡午覺的覺、仙草凍的凍皆為四聲）
       unit_7: [
         { id: 701, unit: "unit_7", word: "烏龜",   emoji: "🐢", enabled: true, chars: [{ s: ["ㄨ"], t: "" },          { s: ["ㄍ","ㄨ","ㄟ"], t: "" }] },
         { id: 702, unit: "unit_7", word: "兔子",   emoji: "🐰", enabled: true, chars: [{ s: ["ㄊ","ㄨ"], t: "ˋ" },     { s: ["ㄗ"], t: "˙" }] },
@@ -1563,7 +1520,7 @@
       "ㄨ": ["ㄩ"]
     };
 
-    let roundLengthSetting = "10"; // "5" | "10" | "15" | "20" | "all_unit"
+    let roundLengthSetting = "10";
     let questionsPerRound = 10;
     let currentUnitKey = "unit_7";
     let customSelectedUnits = ["unit_1_2", "unit_3", "unit_4", "unit_5", "unit_6", "unit_7"];
@@ -1571,19 +1528,16 @@
     let challengeMode = false;
     let showHint = true;
 
-    // 單局進度與不重複出題追蹤
     let roundQuestionIndex = 1;
     let roundMistakeCount = 0;
     let currentQuestionHadMistake = false;
     let usedWordIdsInRound = new Set();
     let usedCharPositionsInRound = {};
 
-    // 複習字卡模式狀態
     let flashcardDeck = [];
     let flashcardIndex = 0;
     let flashcardShuffled = false;
 
-    // 當局作答明細紀錄（供歷次練習紀錄使用）
     let currentRoundLogs = [];
     let currentQuestionLog = null;
 
@@ -1595,6 +1549,8 @@
     let practiceHistory = [];
 
     try {
+      const savedLen = localStorage.getItem("zhuyin_round_length_setting");
+      if (savedLen) roundLengthSetting = savedLen;
       const savedMistakes = localStorage.getItem("zhuyin_mistake_book_v2");
       if (savedMistakes) mistakeBook = JSON.parse(savedMistakes);
       const savedStats = localStorage.getItem("zhuyin_word_stats_v2");
@@ -1682,7 +1638,6 @@
       return `${y}/${m}/${d} ${hh}:${mm}`;
     }
 
-    // 合成音效引擎
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playSound(type) {
       if (audioCtx.state === "suspended") audioCtx.resume();
@@ -1786,7 +1741,6 @@
       return `<div class="word-grid-container ${charLenClass}">${cellsHTML}</div>`;
     }
 
-    // 渲染複習字卡專用的「左國字、右直式注音」上下直式編排
     function renderFlashcardVerticalWordHTML(item) {
       const hanziArr = Array.from(item.word);
       const charLenClass = `chars-${item.chars.length}`;
@@ -1947,6 +1901,9 @@
 
     function changeRoundLength(val) {
       roundLengthSetting = val;
+      try {
+        localStorage.setItem("zhuyin_round_length_setting", val);
+      } catch (e) {}
       resetRoundCounters();
       nextQuestion();
     }
@@ -2324,7 +2281,6 @@
       }
     }
 
-    // 單局結束：寫入練習紀錄並顯示結算成績單
     function showRoundResultModal() {
       playSound("fanfare");
 
@@ -2385,9 +2341,6 @@
       nextQuestion();
     }
 
-    // =========================================
-    // 📊 歷次練習紀錄 Modal（含展開當下誤選答案）
-    // =========================================
     function showHistoryResetConfirm(show) {
       document.getElementById("historyResetTriggerBtn").style.display = show ? "none" : "inline-block";
       document.getElementById("historyResetConfirmBox").style.display = show ? "inline-flex" : "none";
@@ -2410,6 +2363,8 @@
           const badgeColor = rec.wrongCount === 0
             ? "background:#DCFCE7; color:#15803D; border:1.5px solid #86EFAC;"
             : "background:#FEF2F2; color:#B91C1C; border:1.5px solid #FECACA;";
+
+          const totalLogged = rec.logs ? rec.logs.length : 0;
 
           const detailsHTML = (rec.logs || []).map(log => {
             const isClean = !log.wrongPicks || log.wrongPicks.length === 0;
@@ -2438,7 +2393,7 @@
                   📅 ${rec.timeStr} ｜ ${rec.modeName} ${rec.challenge ? "🔥" : ""}
                 </div>
                 <div style="font-size:0.85rem; color:#64748B; font-weight:700; margin-top:2px;">
-                  範圍：${rec.scopeName}（共 ${rec.total} 題）
+                  範圍：${rec.scopeName}（本局共出 ${rec.total} 題，完整記錄 ${totalLogged} 題）
                 </div>
               </div>
               <div style="display:flex; align-items:center; gap:8px;">
@@ -2449,6 +2404,9 @@
               </div>
             </div>
             <div class="history-detail-list">
+              <div style="font-size:0.82rem; color:#6B21A8; font-weight:800; margin-bottom:4px;">
+                📋 本局 ${totalLogged} 題全部作答明細（上下滑動可查看全部）：
+              </div>
               ${detailsHTML}
             </div>
           `;
@@ -2470,7 +2428,6 @@
       document.getElementById("historyModal").classList.remove("open");
     }
 
-    // 跨單元組合 Modal
     function openCustomUnitModal() {
       const container = document.getElementById("customUnitList");
       container.innerHTML = "";
@@ -2512,7 +2469,6 @@
       nextQuestion();
     }
 
-    // 錯題本 Modal 與兩段式防呆重置
     function showMistakeResetConfirm(show) {
       document.getElementById("mistakeResetTriggerBtn").style.display = show ? "none" : "inline-block";
       document.getElementById("mistakeResetConfirmBox").style.display = show ? "inline-flex" : "none";
@@ -2579,7 +2535,6 @@
       document.getElementById("mistakeModal").classList.remove("open");
     }
 
-    // 詞庫與被考次數統計 Modal ＋ 兩段式防呆重置
     function showStatResetConfirm(show) {
       document.getElementById("statResetTriggerBtn").style.display = show ? "none" : "inline-block";
       document.getElementById("statResetConfirmBox").style.display = show ? "inline-flex" : "none";
@@ -2626,7 +2581,6 @@
       nextQuestion();
     }
 
-    // 支援電腦鍵盤左右鍵切換字卡、空白鍵聽發音
     window.addEventListener("keydown", (e) => {
       if (currentMode !== "card") return;
       if (e.key === "ArrowLeft") {
@@ -2640,6 +2594,8 @@
     });
 
     window.addEventListener("DOMContentLoaded", () => {
+      const lenSelect = document.getElementById("roundLengthSelect");
+      if (lenSelect) lenSelect.value = roundLengthSetting;
       updateMistakeCountUI();
       updateHistoryCountUI();
       updateScopeLabel();
