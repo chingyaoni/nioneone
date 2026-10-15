@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>注音大冒險 V2.4 - 全學期互動題庫</title>
+  <title>注音大冒險 V2.6 - 全學期互動題庫與字卡</title>
   <style>
     :root {
       --primary: #3B82F6;
@@ -164,7 +164,7 @@
     .mode-tabs {
       display: flex;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       padding: 12px 20px 4px;
       flex-wrap: wrap;
     }
@@ -173,8 +173,8 @@
       background: white;
       border: 3px solid #E2E8F0;
       border-radius: 18px;
-      padding: 9px 18px;
-      font-size: 1.05rem;
+      padding: 9px 16px;
+      font-size: 1.02rem;
       font-weight: 800;
       color: #475569;
       cursor: pointer;
@@ -188,6 +188,12 @@
       color: white;
       box-shadow: 0 4px 0 #1D4ED8;
       transform: translateY(-2px);
+    }
+
+    .mode-tab.card-mode-tab.active {
+      background: #8B5CF6;
+      border-color: #7C3AED;
+      box-shadow: 0 4px 0 #5B21B6;
     }
 
     main {
@@ -411,9 +417,9 @@
 
     /* 1 個注音：正中間 (50%) */
     .tone-side.pos-1 { top: 50%; }
-    /* 2 個注音：第 1 與第 2 符號交界線正中間 (50%) */
-    .tone-side.pos-2 { top: 50%; }
-    /* 3 個注音：第 2（介音）與第 3（韻母）交界線正中間 (66.67%) */
+    /* 2 個注音：下移校正至 60%，讓聲調筆畫正中切齊十字方格中央水平格線 */
+    .tone-side.pos-2 { top: 60%; }
+    /* 3 個注音：第 2（介音）與第 3（韻母）交界線正中間 (66.67%) - 維持不變 */
     .tone-side.pos-3 { top: 66.67%; }
 
     .missing-slot {
@@ -438,6 +444,168 @@
       border-radius: 6px;
       padding: 2px 6px;
       font-size: 1.6rem;
+    }
+
+    /* =========================================
+       📖 第 4 模式：複習字卡（上下直式國字＋旁邊注音）
+       ========================================= */
+    .flashcard-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .flashcard-Order-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-mini-order {
+      background: #F3E8FF;
+      border: 2px solid #C084FC;
+      color: #6B21A8;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-mini-order:active {
+      transform: scale(0.95);
+    }
+
+    .flashcard-body {
+      background: linear-gradient(180deg, #FFFFFF 0%, #FFFBEB 100%);
+      border: 4px solid #F59E0B;
+      border-radius: 28px;
+      padding: 18px 28px;
+      box-shadow: 0 10px 25px rgba(245, 158, 11, 0.15);
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: transform 0.12s;
+      min-width: 240px;
+    }
+
+    .flashcard-body:active {
+      transform: scale(0.98);
+    }
+
+    .flashcard-emoji {
+      font-size: 3.4rem;
+      line-height: 1.1;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08));
+    }
+
+    /* 國字＋直式注音：由上而下垂直排列 */
+    .flashcard-vertical-word {
+      display: inline-flex;
+      flex-direction: column;
+      border: 3px solid var(--grid-border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #FFFDF9;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    .flashcard-char-row {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      border-bottom: 2px solid var(--grid-border);
+    }
+
+    .flashcard-char-row:last-child {
+      border-bottom: none;
+    }
+
+    .kanji-cell {
+      width: 94px;
+      height: 94px;
+      border-right: 2px solid var(--grid-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.4rem;
+      font-weight: 900;
+      color: #0F172A;
+      position: relative;
+      background: #FFFDF9;
+      font-family: "DFKai-SB", "BiauKai", "Kaiti TC", "STKaiti", "PingFang TC", serif;
+    }
+
+    /* 國字格內的淡十字米字輔助線 */
+    .kanji-cell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(93,64,55,0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(93,64,55,0.12) 1px, transparent 1px);
+      background-size: 50% 50%;
+      pointer-events: none;
+    }
+
+    .flashcard-char-row .char-cell {
+      border-bottom: none;
+    }
+
+    .flashcard-nav-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      width: 100%;
+      max-width: 460px;
+      margin-top: 4px;
+    }
+
+    .btn-card-nav {
+      flex: 1;
+      background: #3B82F6;
+      color: white;
+      border: none;
+      border-radius: 18px;
+      padding: 13px 18px;
+      font-size: 1.15rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #1D4ED8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.12s;
+    }
+
+    .btn-card-nav:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #1D4ED8;
+    }
+
+    .btn-card-nav:disabled {
+      background: #CBD5E1;
+      box-shadow: 0 5px 0 #94A3B8;
+      color: #64748B;
+      cursor: not-allowed;
+      opacity: 0.75;
+    }
+
+    .btn-card-nav.prev-btn {
+      background: #64748B;
+      box-shadow: 0 5px 0 #334155;
+    }
+
+    .btn-card-nav.prev-btn:active:not(:disabled) {
+      box-shadow: 0 2px 0 #334155;
     }
 
     /* 選項卡片區 */
@@ -757,28 +925,28 @@
       }
 
       .brand-title {
-        font-size: 0.88rem;
+        font-size: 0.85rem;
         margin-right: 0;
       }
 
       .unit-selector, .count-selector {
-        padding: 5px 6px;
-        font-size: 0.78rem;
+        padding: 5px 5px;
+        font-size: 0.76rem;
         border-radius: 9px;
         box-shadow: 0 2px 0 rgba(0,0,0,0.2);
       }
 
       .brand-area .btn-top {
-        padding: 5px 7px;
-        font-size: 0.78rem;
+        padding: 5px 6px;
+        font-size: 0.76rem;
         border-radius: 9px;
       }
 
       .mobile-drawer-toggle {
         display: inline-flex;
         align-items: center;
-        padding: 5px 7px;
-        font-size: 0.78rem;
+        padding: 5px 6px;
+        font-size: 0.76rem;
         border-radius: 9px;
       }
 
@@ -805,18 +973,18 @@
         border-radius: 10px;
       }
 
-      /* 三大模式單行緊湊排列 */
+      /* 四大模式單行緊湊排列 */
       .mode-tabs {
-        padding: 6px 10px 2px;
-        gap: 6px;
+        padding: 6px 8px 2px;
+        gap: 4px;
         flex-wrap: nowrap;
       }
 
       .mode-tab {
         flex: 1;
-        padding: 6px 4px;
-        font-size: 0.86rem;
-        border-radius: 12px;
+        padding: 6px 2px;
+        font-size: 0.76rem;
+        border-radius: 11px;
         border-width: 2px;
         box-shadow: 0 3px 0 #CBD5E0;
         text-align: center;
@@ -850,7 +1018,7 @@
       }
 
       .prompt-title {
-        font-size: 0.9rem;
+        font-size: 0.88rem;
         margin-bottom: 6px;
       }
 
@@ -937,6 +1105,51 @@
       .word-grid-container.chars-3 .zhuyin-syllable-box.count-2 .sym-item { height: 16px; font-size: 0.92rem; }
       .word-grid-container.chars-3 .zhuyin-syllable-box.count-3 .sym-item { height: 14px; font-size: 0.78rem; }
 
+      /* 手機版：複習字卡尺寸自動優化，確保一頁免滑動 */
+      .flashcard-wrapper {
+        gap: 10px;
+      }
+
+      .flashcard-body {
+        padding: 12px 20px;
+        border-radius: 22px;
+        gap: 8px;
+        min-width: 190px;
+      }
+
+      .flashcard-emoji {
+        font-size: 2.5rem;
+      }
+
+      .kanji-cell {
+        width: 68px;
+        height: 68px;
+        font-size: 2.45rem;
+      }
+
+      .flashcard-char-row .char-cell {
+        width: 64px;
+        height: 68px;
+      }
+
+      /* 3 個字字卡在手機版稍微再縮減高度 */
+      .flashcard-vertical-word.chars-3 .kanji-cell {
+        width: 60px;
+        height: 58px;
+        font-size: 2.1rem;
+      }
+
+      .flashcard-vertical-word.chars-3 .char-cell {
+        width: 58px;
+        height: 58px;
+      }
+
+      .btn-card-nav {
+        padding: 10px 12px;
+        font-size: 1rem;
+        border-radius: 14px;
+      }
+
       .options-grid {
         gap: 8px;
       }
@@ -996,6 +1209,7 @@
           <option value="10" selected>每局 10 題</option>
           <option value="15">每局 15 題</option>
           <option value="20">每局 20 題</option>
+          <option value="all_unit">整個單元</option>
         </select>
         <!-- 手機版專用收合觸發鈕 -->
         <button class="mobile-drawer-toggle" id="mobileDrawerBtn" onclick="toggleMobileDrawer()">⚙️ 選單 ▾</button>
@@ -1013,9 +1227,10 @@
   </header>
 
   <div class="mode-tabs">
-    <button class="mode-tab active" id="tab-listen" onclick="switchMode('listen')">🎧 1. 聽音選注音</button>
-    <button class="mode-tab" id="tab-tone" onclick="switchMode('tone')">🎩 2. 聲調捕手</button>
-    <button class="mode-tab" id="tab-spell" onclick="switchMode('spell')">🧩 3. 缺字拼音</button>
+    <button class="mode-tab active" id="tab-listen" onclick="switchMode('listen')">🎧 1. 聽音</button>
+    <button class="mode-tab" id="tab-tone" onclick="switchMode('tone')">🎩 2. 聲調</button>
+    <button class="mode-tab" id="tab-spell" onclick="switchMode('spell')">🧩 3. 拼音</button>
+    <button class="mode-tab card-mode-tab" id="tab-card" onclick="switchMode('card')">📖 4. 複習字卡</button>
   </div>
 
   <main>
@@ -1030,7 +1245,7 @@
       </div>
       <div class="prompt-title" id="promptTitle">請點擊按鈕聽發音，選出正確的直式注音詞語！</div>
 
-      <div class="audio-hint-row">
+      <div class="audio-hint-row" id="audioHintRow">
         <button class="speaker-big-btn" onclick="speakCurrentWord()">
           🔊 點擊聽發音
         </button>
@@ -1084,7 +1299,7 @@
         <button class="btn-top" onclick="applyCustomUnits()">套用並開始出題</button>
       </div>
       <div style="padding: 12px 20px; background: #EFF6FF; color: #1E40AF; font-weight: 700; font-size: 0.92rem;">
-        💡 可自由勾選多個單元合併抽考：
+        💡 可自由勾選多個單元合併抽考或複習字卡：
       </div>
       <div class="modal-body" id="customUnitList" style="grid-template-columns: 1fr;"></div>
     </div>
@@ -1142,7 +1357,8 @@
     const MODE_NAMES = {
       listen: "🎧 聽音選注音",
       tone: "🎩 聲調與輕聲捕手",
-      spell: "🧩 缺字拼音挑戰"
+      spell: "🧩 缺字拼音挑戰",
+      card: "📖 複習字卡"
     };
 
     const TONE_LABELS = {
@@ -1347,6 +1563,7 @@
       "ㄨ": ["ㄩ"]
     };
 
+    let roundLengthSetting = "10"; // "5" | "10" | "15" | "20" | "all_unit"
     let questionsPerRound = 10;
     let currentUnitKey = "unit_7";
     let customSelectedUnits = ["unit_1_2", "unit_3", "unit_4", "unit_5", "unit_6", "unit_7"];
@@ -1360,6 +1577,11 @@
     let currentQuestionHadMistake = false;
     let usedWordIdsInRound = new Set();
     let usedCharPositionsInRound = {};
+
+    // 複習字卡模式狀態
+    let flashcardDeck = [];
+    let flashcardIndex = 0;
+    let flashcardShuffled = false;
 
     // 當局作答明細紀錄（供歷次練習紀錄使用）
     let currentRoundLogs = [];
@@ -1416,11 +1638,27 @@
       btn.textContent = isOpen ? "⚙️ 收合 ▴" : "⚙️ 選單 ▾";
     }
 
+    function getEffectiveRoundLength() {
+      const activePool = getActiveWords();
+      if (roundLengthSetting === "all_unit") {
+        return Math.max(1, activePool.length);
+      }
+      return parseInt(roundLengthSetting, 10) || 10;
+    }
+
     function updateRoundStatusUI() {
       const pill = document.getElementById("roundStatusPill");
-      pill.textContent = `🎯 第 ${roundQuestionIndex} / ${questionsPerRound} 題（本局錯 ${roundMistakeCount} 題）`;
-      const pct = (roundQuestionIndex / questionsPerRound) * 100;
-      document.getElementById("progressBar").style.width = `${pct}%`;
+      if (currentMode === "card") {
+        const totalCards = Math.max(1, flashcardDeck.length);
+        const curCard = Math.min(flashcardIndex + 1, totalCards);
+        pill.textContent = `📖 字卡複習：第 ${curCard} / ${totalCards} 張`;
+        const pct = (curCard / totalCards) * 100;
+        document.getElementById("progressBar").style.width = `${pct}%`;
+      } else {
+        pill.textContent = `🎯 第 ${roundQuestionIndex} / ${questionsPerRound} 題（本局錯 ${roundMistakeCount} 題）`;
+        const pct = (roundQuestionIndex / questionsPerRound) * 100;
+        document.getElementById("progressBar").style.width = `${pct}%`;
+      }
     }
 
     function getAllWordsFlat() {
@@ -1498,49 +1736,73 @@
       if (currentQuestion) speakText(currentQuestion.speakText);
     }
 
+    function renderSingleCharZhuyinCellHTML(ch, options = {}) {
+      const { isSymbolHidden = false, isToneHidden = false } = options;
+      const symCount = ch.s.length;
+      const boxCountClass = isSymbolHidden ? "count-1" : `count-${symCount}`;
+      const posClass = `pos-${symCount}`;
+
+      let symbolsInnerHTML = "";
+      if (isSymbolHidden) {
+        symbolsInnerHTML = `<div class="sym-item"><span class="missing-sym-slot">？</span></div>`;
+      } else {
+        symbolsInnerHTML = ch.s.map(sym => `<div class="sym-item">${sym}</div>`).join("");
+      }
+
+      let toneHTML = "";
+      let hasNeutralClass = "";
+      if (!isSymbolHidden) {
+        if (isToneHidden) {
+          toneHTML = `<span class="tone-side ${posClass} missing-slot">？</span>`;
+        } else if (ch.t === "˙") {
+          toneHTML = `<span class="tone-neutral">˙</span>`;
+          hasNeutralClass = "has-neutral-tone";
+        } else if (ch.t) {
+          toneHTML = `<span class="tone-side ${posClass}">${ch.t}</span>`;
+        }
+      }
+
+      return `
+        <div class="char-cell ${hasNeutralClass}">
+          <div class="zhuyin-syllable-box ${boxCountClass}">
+            ${toneHTML}
+            ${symbolsInnerHTML}
+          </div>
+        </div>
+      `;
+    }
+
     function renderWordGridHTML(chars, options = {}) {
       const { hideToneCharIndex = -1, hideSymbolCharIndex = -1 } = options;
       const charLenClass = `chars-${chars.length}`;
 
-      const cellsHTML = chars.map((ch, idx) => {
-        const symCount = ch.s.length;
-        const isSymbolHidden = idx === hideSymbolCharIndex;
-        const isToneHidden = idx === hideToneCharIndex;
+      const cellsHTML = chars.map((ch, idx) =>
+        renderSingleCharZhuyinCellHTML(ch, {
+          isSymbolHidden: idx === hideSymbolCharIndex,
+          isToneHidden: idx === hideToneCharIndex
+        })
+      ).join("");
 
-        const boxCountClass = isSymbolHidden ? "count-1" : `count-${symCount}`;
-        const posClass = `pos-${symCount}`;
+      return `<div class="word-grid-container ${charLenClass}">${cellsHTML}</div>`;
+    }
 
-        let symbolsInnerHTML = "";
-        if (isSymbolHidden) {
-          symbolsInnerHTML = `<div class="sym-item"><span class="missing-sym-slot">？</span></div>`;
-        } else {
-          symbolsInnerHTML = ch.s.map(sym => `<div class="sym-item">${sym}</div>`).join("");
-        }
+    // 渲染複習字卡專用的「左國字、右直式注音」上下直式編排
+    function renderFlashcardVerticalWordHTML(item) {
+      const hanziArr = Array.from(item.word);
+      const charLenClass = `chars-${item.chars.length}`;
 
-        let toneHTML = "";
-        let hasNeutralClass = "";
-        if (!isSymbolHidden) {
-          if (isToneHidden) {
-            toneHTML = `<span class="tone-side ${posClass} missing-slot">？</span>`;
-          } else if (ch.t === "˙") {
-            toneHTML = `<span class="tone-neutral">˙</span>`;
-            hasNeutralClass = "has-neutral-tone";
-          } else if (ch.t) {
-            toneHTML = `<span class="tone-side ${posClass}">${ch.t}</span>`;
-          }
-        }
-
+      const rowsHTML = item.chars.map((ch, idx) => {
+        const hanzi = hanziArr[idx] || "";
+        const zhuyinCellHTML = renderSingleCharZhuyinCellHTML(ch);
         return `
-          <div class="char-cell ${hasNeutralClass}">
-            <div class="zhuyin-syllable-box ${boxCountClass}">
-              ${toneHTML}
-              ${symbolsInnerHTML}
-            </div>
+          <div class="flashcard-char-row">
+            <div class="kanji-cell">${hanzi}</div>
+            ${zhuyinCellHTML}
           </div>
         `;
       }).join("");
 
-      return `<div class="word-grid-container ${charLenClass}">${cellsHTML}</div>`;
+      return `<div class="flashcard-vertical-word ${charLenClass}">${rowsHTML}</div>`;
     }
 
     function serializeChars(chars) {
@@ -1643,7 +1905,33 @@
       return a;
     }
 
+    function buildFlashcardDeck() {
+      let pool = getActiveWords();
+      if (pool.length === 0) pool = DATABASE.unit_7;
+      const ordered = flashcardShuffled ? shuffle(pool) : [...pool];
+      const limit = roundLengthSetting === "all_unit"
+        ? ordered.length
+        : Math.min(parseInt(roundLengthSetting, 10) || 10, ordered.length);
+      flashcardDeck = ordered.slice(0, limit);
+      flashcardIndex = 0;
+    }
+
+    function toggleFlashcardOrder() {
+      flashcardShuffled = !flashcardShuffled;
+      buildFlashcardDeck();
+      renderFlashcardStage();
+    }
+
+    function stepFlashcard(delta) {
+      if (flashcardDeck.length === 0) return;
+      const nextIdx = flashcardIndex + delta;
+      if (nextIdx < 0 || nextIdx >= flashcardDeck.length) return;
+      flashcardIndex = nextIdx;
+      renderFlashcardStage();
+    }
+
     function resetRoundCounters() {
+      questionsPerRound = getEffectiveRoundLength();
       roundQuestionIndex = 1;
       roundMistakeCount = 0;
       currentQuestionHadMistake = false;
@@ -1651,11 +1939,14 @@
       usedCharPositionsInRound = {};
       currentRoundLogs = [];
       currentQuestionLog = null;
+      if (currentMode === "card") {
+        buildFlashcardDeck();
+      }
       updateRoundStatusUI();
     }
 
     function changeRoundLength(val) {
-      questionsPerRound = parseInt(val, 10) || 10;
+      roundLengthSetting = val;
       resetRoundCounters();
       nextQuestion();
     }
@@ -1682,14 +1973,15 @@
       const badge = document.getElementById("challengeBadge");
       btn.textContent = challengeMode ? "🔥 挑戰：開" : "🔥 挑戰：關";
       btn.classList.toggle("active-challenge", challengeMode);
-      badge.classList.toggle("show", challengeMode);
-      nextQuestion();
+      badge.classList.toggle("show", challengeMode && currentMode !== "card");
+      if (currentMode !== "card") nextQuestion();
     }
 
     function switchMode(mode) {
       currentMode = mode;
       document.querySelectorAll(".mode-tab").forEach(btn => btn.classList.remove("active"));
       document.getElementById(`tab-${mode}`).classList.add("active");
+      document.getElementById("challengeBadge").classList.toggle("show", challengeMode && currentMode !== "card");
       resetRoundCounters();
       nextQuestion();
     }
@@ -1699,7 +1991,11 @@
       const btn = document.getElementById("toggleHintBtn");
       btn.textContent = showHint ? "💡 提示：開" : "💡 提示：關";
       btn.classList.toggle("active-hint", showHint);
-      renderHintBox();
+      if (currentMode === "card") {
+        renderFlashcardStage();
+      } else {
+        renderHintBox();
+      }
     }
 
     function renderHintBox() {
@@ -1710,6 +2006,56 @@
       } else {
         box.innerHTML = `<span class="hint-emoji">${currentQuestion.emoji}</span> <span style="color:#94A3B8; font-size:0.95rem;">（純聽音）</span>`;
       }
+    }
+
+    function renderFlashcardStage() {
+      if (flashcardDeck.length === 0) buildFlashcardDeck();
+      const item = flashcardDeck[flashcardIndex] || flashcardDeck[0];
+      currentQuestion = {
+        id: item.id,
+        word: item.word,
+        emoji: item.emoji,
+        speakText: item.word
+      };
+
+      updateRoundStatusUI();
+
+      document.getElementById("promptTitle").textContent = "📖 點擊「聽發音」或字卡本體可聽讀音，按左右鍵翻頁：";
+      document.getElementById("audioHintRow").style.display = "none";
+      document.getElementById("optionsGrid").innerHTML = "";
+      document.getElementById("feedbackBanner").textContent = "";
+
+      const prevDisabled = flashcardIndex <= 0 ? "disabled" : "";
+      const nextDisabled = flashcardIndex >= flashcardDeck.length - 1 ? "disabled" : "";
+      const orderBtnText = flashcardShuffled ? "🔀 目前：隨機排列（點此改課本順序）" : "📑 目前：課本順序（點此隨機洗牌）";
+
+      const targetArea = document.getElementById("questionTargetArea");
+      targetArea.innerHTML = `
+        <div class="flashcard-wrapper">
+          <div class="flashcard-Order-bar">
+            <button class="speaker-big-btn" onclick="speakCurrentWord()" style="margin:0;">
+              🔊 點擊聽發音
+            </button>
+            <button class="btn-mini-order" onclick="toggleFlashcardOrder()">
+              ${orderBtnText}
+            </button>
+          </div>
+
+          <div class="flashcard-body" onclick="speakCurrentWord()" title="點擊字卡聽發音">
+            ${showHint ? `<div class="flashcard-emoji">${item.emoji}</div>` : ""}
+            ${renderFlashcardVerticalWordHTML(item)}
+          </div>
+
+          <div class="flashcard-nav-row">
+            <button class="btn-card-nav prev-btn" onclick="stepFlashcard(-1)" ${prevDisabled}>
+              ◀ 上一題
+            </button>
+            <button class="btn-card-nav next-btn" onclick="stepFlashcard(1)" ${nextDisabled}>
+              下一題 ▶
+            </button>
+          </div>
+        </div>
+      `;
     }
 
     function pickNextQuestionTarget(activePool) {
@@ -1765,7 +2111,6 @@
       isLocked = false;
       currentQuestionHadMistake = false;
       document.getElementById("feedbackBanner").textContent = "";
-      updateRoundStatusUI();
 
       let activePool = getActiveWords();
       if (activePool.length === 0) {
@@ -1773,7 +2118,16 @@
         document.getElementById("unitSelect").value = "unit_7";
         updateScopeLabel();
         activePool = getActiveWords();
+        questionsPerRound = getEffectiveRoundLength();
       }
+
+      if (currentMode === "card") {
+        renderFlashcardStage();
+        return;
+      }
+
+      document.getElementById("audioHintRow").style.display = "flex";
+      updateRoundStatusUI();
 
       const { targetItem, charIdx } = pickNextQuestionTarget(activePool);
       const targetArea = document.getElementById("questionTargetArea");
@@ -2272,11 +2626,24 @@
       nextQuestion();
     }
 
+    // 支援電腦鍵盤左右鍵切換字卡、空白鍵聽發音
+    window.addEventListener("keydown", (e) => {
+      if (currentMode !== "card") return;
+      if (e.key === "ArrowLeft") {
+        stepFlashcard(-1);
+      } else if (e.key === "ArrowRight") {
+        stepFlashcard(1);
+      } else if (e.key === " ") {
+        e.preventDefault();
+        speakCurrentWord();
+      }
+    });
+
     window.addEventListener("DOMContentLoaded", () => {
       updateMistakeCountUI();
       updateHistoryCountUI();
       updateScopeLabel();
-      updateRoundStatusUI();
+      resetRoundCounters();
       nextQuestion();
     });
   </script>
